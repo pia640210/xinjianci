@@ -8,6 +8,7 @@
 <style>
 :root {
   --gold: #c8a96e;
+  --gold-dim: rgba(200,169,110,0.45);
   --gold-light: #e8d5a3;
   --cream: #f5f0e8;
   --dark: #080c04;
@@ -29,19 +30,17 @@ body {
 
 /* ══ LANDING ══ */
 #landing {
-  position: relative;
-  width: 100vw; height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  overflow: hidden;
+  position:relative; width:100vw; height:100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  overflow:hidden;
 }
 #bg {
-  position: absolute; inset: 0;
-  background-size: cover;
-  background-position: center 28%;
-  filter: brightness(0.28) saturate(0.6);
-  transform: scale(1.07);
-  animation: breathe 30s ease-in-out infinite alternate;
+  position:absolute; inset:0;
+  background-size:cover; background-position:center 28%;
+  filter:brightness(0.28) saturate(0.6);
+  transform:scale(1.07);
+  animation:breathe 30s ease-in-out infinite alternate;
 }
 @keyframes breathe {
   from { transform:scale(1.07); filter:brightness(0.28) saturate(0.6); }
@@ -50,8 +49,8 @@ body {
 #bg::after {
   content:''; position:absolute; inset:0;
   background:
-    radial-gradient(ellipse 22% 60% at 50% 50%, rgba(200,169,110,0.1) 0%, transparent 60%),
-    linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, transparent 28%, rgba(0,0,0,0.72) 100%);
+    radial-gradient(ellipse 20% 55% at 50% 50%, rgba(200,169,110,0.09) 0%, transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, transparent 30%, rgba(0,0,0,0.72) 100%);
 }
 .lc {
   position:relative; z-index:2;
@@ -64,295 +63,268 @@ body {
   font-size:clamp(2.6rem,6.5vw,5rem);
   letter-spacing:0.5em;
   color:var(--cream);
-  text-shadow:0 0 100px rgba(200,169,110,0.2);
-  animation: rise 3s ease forwards;
-  opacity:0;
+  text-shadow:0 0 100px rgba(200,169,110,0.18);
+  opacity:0; animation:rise 3s ease 0.2s forwards;
 }
 .site-sub {
   font-family:'Cormorant Garamond',serif;
   font-style:italic;
-  font-size:0.78rem;
-  letter-spacing:0.42em;
+  font-size:0.78rem; letter-spacing:0.42em;
   color:var(--gold);
-  margin-top:0.4em;
-  margin-bottom:3.5rem;
-  animation: rise 3s ease 0.4s forwards;
-  opacity:0;
+  margin-top:0.3em; margin-bottom:3.5rem;
+  opacity:0; animation:rise 3s ease 0.6s forwards;
 }
 .landing-q {
-  font-size:clamp(0.8rem,1.8vw,0.95rem);
-  letter-spacing:0.22em;
-  color:var(--gold-light);
-  margin-bottom:2rem;
-  animation: rise 2.5s ease 1s forwards;
-  opacity:0;
-  font-weight:300;
+  font-size:clamp(0.78rem,1.7vw,0.92rem);
+  letter-spacing:0.22em; color:var(--gold-light);
+  margin-bottom:2rem; font-weight:300;
+  opacity:0; animation:rise 2.5s ease 1.1s forwards;
 }
 @keyframes rise {
   from { opacity:0; transform:translateY(20px); }
   to   { opacity:1; transform:translateY(0); }
 }
-
-/* mood buttons */
 .mood-grid {
-  display:grid;
-  grid-template-columns:repeat(2,auto);
-  gap:0.55rem 1rem;
-  animation: rise 2.5s ease 1.4s forwards;
-  opacity:0;
+  display:grid; grid-template-columns:repeat(2,auto);
+  gap:0.5rem 0.9rem;
+  opacity:0; animation:rise 2.5s ease 1.5s forwards;
   margin-bottom:2.2rem;
 }
 .mb {
   cursor:pointer;
-  padding:0.6rem 1.3rem;
-  border:1px solid rgba(200,169,110,0.22);
+  padding:0.58rem 1.25rem;
+  border:1px solid rgba(200,169,110,0.2);
   background:rgba(8,12,4,0.55);
-  color:rgba(245,240,232,0.7);
+  color:rgba(245,240,232,0.68);
   font-family:'Noto Serif TC','PingFang TC',serif;
   font-weight:300;
-  font-size:clamp(0.78rem,1.6vw,0.88rem);
-  letter-spacing:0.16em;
+  font-size:clamp(0.76rem,1.5vw,0.86rem);
+  letter-spacing:0.15em;
   transition:all 0.35s ease;
   backdrop-filter:blur(6px);
   text-align:center;
 }
 .mb:hover {
-  border-color:var(--gold);
-  color:var(--cream);
-  background:rgba(200,169,110,0.09);
-  transform:translateY(-1px);
+  border-color:var(--gold); color:var(--cream);
+  background:rgba(200,169,110,0.08); transform:translateY(-1px);
 }
-.wander-entry {
-  animation: rise 2s ease 2s forwards;
-  opacity:0;
-}
+.wander-entry { opacity:0; animation:rise 2s ease 2.2s forwards; }
 .wander-link {
-  cursor:pointer;
-  background:none; border:none;
+  cursor:pointer; background:none; border:none;
   color:var(--gold);
-  font-family:'Noto Serif TC',serif;
-  font-weight:300;
-  font-size:0.75rem;
-  letter-spacing:0.28em;
-  opacity:0.65;
-  transition:opacity 0.3s;
+  font-family:'Noto Serif TC',serif; font-weight:300;
+  font-size:0.73rem; letter-spacing:0.28em;
+  opacity:0.6; transition:opacity 0.3s;
 }
 .wander-link:hover { opacity:1; }
 
-/* ══ MAIN OVERLAY ══ */
+/* ══ SEARCH BAR on landing ══ */
+.landing-search-wrap {
+  margin-top:2.8rem;
+  opacity:0; animation:rise 2s ease 2.6s forwards;
+  width:clamp(260px,55vw,420px);
+}
+.landing-search-label {
+  font-size:0.6rem; letter-spacing:0.38em;
+  color:rgba(200,169,110,0.4); margin-bottom:0.6rem;
+  display:block; text-align:center;
+}
+.landing-search {
+  width:100%;
+  background:rgba(8,12,4,0.6);
+  border:none; border-bottom:1px solid rgba(200,169,110,0.25);
+  color:var(--cream);
+  font-family:'Noto Serif TC',serif; font-weight:300;
+  font-size:0.84rem; letter-spacing:0.1em;
+  padding:0.7rem 0.4rem;
+  outline:none; transition:border-color 0.3s;
+  text-align:center;
+  backdrop-filter:blur(6px);
+}
+.landing-search:focus { border-color:var(--gold); }
+.landing-search::placeholder { color:rgba(245,240,232,0.22); font-style:italic; }
+
+/* ══ SCREENS ══ */
 .screen {
   display:none;
   position:fixed; inset:0; z-index:100;
-  overflow-y:auto;
-  background:var(--dark2);
+  overflow-y:auto; background:var(--dark2);
 }
 .screen.active { display:block; animation:fadein 0.7s ease; }
 @keyframes fadein { from{opacity:0} to{opacity:1} }
 
-/* hero */
 .s-hero {
-  height:38vh; min-height:220px;
-  position:relative;
-  display:flex; align-items:flex-end;
-  padding:2.5rem clamp(1.5rem,8vw,6rem);
-  overflow:hidden;
+  height:38vh; min-height:210px;
+  position:relative; display:flex; align-items:flex-end;
+  padding:2.5rem clamp(1.5rem,8vw,6rem); overflow:hidden;
 }
 .s-hero-bg {
   position:absolute; inset:0;
   background-size:cover; background-position:center 28%;
-  filter:brightness(0.18) saturate(0.4);
+  filter:brightness(0.16) saturate(0.4);
 }
 .s-hero-bg::after {
   content:''; position:absolute; inset:0;
-  background:linear-gradient(to bottom, transparent 10%, var(--dark2) 100%);
+  background:linear-gradient(to bottom, transparent 5%, var(--dark2) 100%);
 }
 .s-hc { position:relative; z-index:2; }
-.s-tag {
-  font-size:0.58rem; letter-spacing:0.44em;
-  color:var(--gold); margin-bottom:0.55rem;
-}
+.s-tag { font-size:0.57rem; letter-spacing:0.44em; color:var(--gold); margin-bottom:0.5rem; }
 .s-title {
   font-family:'Noto Sans TC','PingFang TC',sans-serif;
   font-weight:200;
-  font-size:clamp(1.6rem,4vw,2.6rem);
-  letter-spacing:0.18em; line-height:1.5;
-  color:var(--cream);
+  font-size:clamp(1.55rem,3.8vw,2.5rem);
+  letter-spacing:0.18em; line-height:1.5; color:var(--cream);
 }
 
-/* back */
 .back {
   position:fixed; top:1.6rem; left:clamp(1rem,4vw,3rem); z-index:200;
   cursor:pointer;
-  font-size:0.62rem; letter-spacing:0.28em; color:var(--gold);
-  background:rgba(8,12,4,0.72); padding:0.45rem 0.9rem;
-  border:1px solid rgba(200,169,110,0.16); backdrop-filter:blur(8px);
+  font-size:0.6rem; letter-spacing:0.28em; color:var(--gold);
+  background:rgba(8,12,4,0.75); padding:0.42rem 0.9rem;
+  border:1px solid rgba(200,169,110,0.15); backdrop-filter:blur(8px);
   opacity:0.75; transition:opacity 0.3s;
 }
 .back:hover { opacity:1; }
 
-/* ══ ARTICLE SCREEN ══ */
+/* ══ ARTICLE ══ */
 .art-wrap {
   padding:clamp(2rem,5vw,4rem) clamp(1.5rem,8vw,6rem);
-  max-width:820px;
+  max-width:800px;
 }
 .article {
-  margin-bottom:4rem;
+  margin-bottom:3.8rem;
   opacity:0; transform:translateY(16px);
   transition:opacity 0.65s ease, transform 0.65s ease;
 }
 .article.vis { opacity:1; transform:translateY(0); }
-.art-n { font-size:0.56rem; letter-spacing:0.42em; color:var(--gold); margin-bottom:0.85rem; }
+.art-n { font-size:0.55rem; letter-spacing:0.42em; color:var(--gold); margin-bottom:0.8rem; }
 .art-text {
-  font-size:clamp(0.92rem,1.85vw,1.06rem);
+  font-size:clamp(0.9rem,1.8vw,1.04rem);
   line-height:2.35; letter-spacing:0.06em;
-  color:rgba(245,240,232,0.78);
-  border-left:1px solid rgba(200,169,110,0.16);
-  padding-left:1.8rem;
-  margin-bottom:1.4rem;
+  color:rgba(245,240,232,0.76);
+  border-left:1px solid rgba(200,169,110,0.14);
+  padding-left:1.7rem; margin-bottom:1.2rem;
 }
+.adiv { width:28px; height:1px; background:rgba(200,169,110,0.14); margin:2.6rem 0; }
 
-/* "我想知道更多" reveal */
-.more-btn {
-  cursor:pointer;
-  display:inline-block;
-  padding-left:1.8rem;
-  font-size:0.65rem; letter-spacing:0.28em;
-  color:rgba(200,169,110,0.45);
-  border:none; background:none;
+/* source reveal - per article */
+.src-toggle {
+  cursor:pointer; background:none; border:none;
+  display:block; padding-left:1.7rem;
+  font-size:0.62rem; letter-spacing:0.26em;
+  color:rgba(200,169,110,0.35);
   font-family:'Noto Serif TC',serif;
-  transition:color 0.3s;
+  transition:color 0.3s; margin-bottom:0;
 }
-.more-btn:hover { color:var(--gold); }
-
-.book-reveal {
-  display:none;
-  padding:1.2rem 1.8rem;
-  margin-top:0.5rem;
-  border-left:1px solid rgba(200,169,110,0.16);
-  animation:fadein 0.5s ease;
+.src-toggle:hover { color:var(--gold); }
+.src-reveal {
+  display:none; padding:1rem 1.7rem 0;
+  animation:fadein 0.45s ease;
 }
-.book-reveal.open { display:block; }
-.book-title {
-  font-size:0.72rem; letter-spacing:0.22em;
-  color:var(--gold); margin-bottom:0.3rem;
-}
-.book-author {
-  font-size:0.62rem; letter-spacing:0.2em;
-  color:var(--soft); margin-bottom:1rem;
-}
-.buy-btn {
-  cursor:pointer;
+.src-reveal.open { display:block; }
+.src-book { font-size:0.7rem; letter-spacing:0.22em; color:var(--gold); margin-bottom:0.25rem; }
+.src-author { font-size:0.6rem; letter-spacing:0.18em; color:var(--soft); margin-bottom:0.9rem; }
+.src-buy {
   display:inline-block;
-  padding:0.45rem 1.2rem;
-  border:1px solid rgba(200,169,110,0.3);
-  background:none;
+  padding:0.4rem 1.1rem;
+  border:1px solid rgba(200,169,110,0.28); background:none;
   color:var(--gold-light);
-  font-family:'Noto Sans TC',sans-serif;
-  font-weight:200;
-  font-size:0.62rem; letter-spacing:0.22em;
-  transition:all 0.3s;
-  text-decoration:none;
+  font-family:'Noto Sans TC',sans-serif; font-weight:200;
+  font-size:0.6rem; letter-spacing:0.2em;
+  text-decoration:none; transition:all 0.3s;
 }
-.buy-btn:hover { border-color:var(--gold); background:rgba(200,169,110,0.08); }
+.src-buy:hover { border-color:var(--gold); background:rgba(200,169,110,0.07); }
 
-.adiv { width:30px; height:1px; background:rgba(200,169,110,0.15); margin:2.8rem 0; }
-
-/* ══ CONTINUE FOOTER ══ */
-.continue-footer {
-  padding:3rem clamp(1.5rem,8vw,6rem) 5rem;
-  border-top:1px solid rgba(200,169,110,0.08);
-  max-width:820px;
+/* ══ RELATED & CONTINUE ══ */
+.related-section {
+  padding:2rem clamp(1.5rem,8vw,6rem);
+  max-width:800px;
+  border-top:1px solid rgba(200,169,110,0.07);
 }
-.cf-label {
-  font-size:0.62rem; letter-spacing:0.38em;
-  color:var(--soft); margin-bottom:1.8rem;
+.related-label { font-size:0.58rem; letter-spacing:0.4em; color:var(--soft); margin-bottom:1.2rem; }
+.related-list { display:flex; flex-direction:column; gap:0.5rem; margin-bottom:2.8rem; }
+.rel-btn {
+  cursor:pointer;
+  padding:0.75rem 1.3rem;
+  border:1px solid rgba(200,169,110,0.15);
+  background:rgba(8,12,4,0.45);
+  color:rgba(245,240,232,0.65);
+  font-family:'Noto Serif TC',serif; font-weight:300;
+  font-size:clamp(0.78rem,1.5vw,0.88rem); letter-spacing:0.14em;
+  text-align:left; transition:all 0.35s; backdrop-filter:blur(4px);
 }
-.cf-options {
-  display:flex; flex-direction:column; gap:0.7rem;
+.rel-btn:hover {
+  border-color:var(--gold); color:var(--cream);
+  background:rgba(200,169,110,0.07); padding-left:1.8rem;
 }
+.continue-label { font-size:0.58rem; letter-spacing:0.4em; color:var(--soft); margin-bottom:1.2rem; }
+.continue-list { display:flex; flex-direction:column; gap:0.5rem; margin-bottom:4rem; }
 .cf-btn {
   cursor:pointer;
-  padding:0.85rem 1.4rem;
-  border:1px solid rgba(200,169,110,0.18);
-  background:rgba(8,12,4,0.5);
-  color:rgba(245,240,232,0.68);
-  font-family:'Noto Serif TC',serif;
-  font-weight:300;
-  font-size:clamp(0.8rem,1.6vw,0.9rem);
-  letter-spacing:0.16em;
-  text-align:left;
-  transition:all 0.35s;
-  backdrop-filter:blur(4px);
+  padding:0.75rem 1.3rem;
+  border:1px solid rgba(200,169,110,0.12);
+  background:rgba(8,12,4,0.35);
+  color:rgba(245,240,232,0.55);
+  font-family:'Noto Serif TC',serif; font-weight:300;
+  font-size:clamp(0.76rem,1.5vw,0.86rem); letter-spacing:0.14em;
+  text-align:left; transition:all 0.35s; backdrop-filter:blur(4px);
 }
 .cf-btn:hover {
-  border-color:var(--gold);
-  color:var(--cream);
-  background:rgba(200,169,110,0.07);
-  padding-left:1.8rem;
+  border-color:rgba(200,169,110,0.35); color:var(--cream);
+  background:rgba(200,169,110,0.05); padding-left:1.8rem;
 }
 
-/* ══ QA SCREEN ══ */
-.qa-wrap {
+/* ══ AI SEARCH SCREEN ══ */
+.search-wrap {
   padding:clamp(2rem,5vw,4rem) clamp(1.5rem,8vw,6rem);
-  max-width:820px;
+  max-width:800px;
 }
-.qa-search {
-  width:100%; max-width:480px;
-  background:rgba(200,169,110,0.04);
-  border:none; border-bottom:1px solid rgba(200,169,110,0.22);
+.search-input-row {
+  display:flex; gap:0.6rem; align-items:flex-end;
+  margin-bottom:2.5rem;
+}
+.search-field {
+  flex:1;
+  background:none;
+  border:none; border-bottom:1px solid rgba(200,169,110,0.25);
   color:var(--cream);
   font-family:'Noto Serif TC',serif; font-weight:300;
-  font-size:0.88rem; letter-spacing:0.1em;
-  padding:0.75rem 0.2rem;
-  margin-bottom:2.5rem;
-  outline:none;
-  transition:border-color 0.3s;
-  display:block;
+  font-size:clamp(0.88rem,1.8vw,1rem); letter-spacing:0.1em;
+  padding:0.7rem 0.2rem;
+  outline:none; transition:border-color 0.3s;
 }
-.qa-search:focus { border-color:var(--gold); }
-.qa-search::placeholder { color:rgba(245,240,232,0.25); }
-.qa-item { border-bottom:1px solid rgba(200,169,110,0.08); }
-.qa-q {
-  padding:1.3rem 0;
-  font-size:clamp(0.88rem,1.75vw,1rem);
-  letter-spacing:0.1em;
-  color:rgba(245,240,232,0.72);
-  display:flex; justify-content:space-between; align-items:center; gap:1rem;
-  cursor:pointer; transition:color 0.3s;
+.search-field:focus { border-color:var(--gold); }
+.search-field::placeholder { color:rgba(245,240,232,0.22); font-style:italic; }
+.search-go {
+  cursor:pointer; background:none;
+  border:1px solid rgba(200,169,110,0.28);
+  color:var(--gold);
+  font-family:'Noto Sans TC',sans-serif; font-weight:200;
+  font-size:0.68rem; letter-spacing:0.2em;
+  padding:0.55rem 1.1rem; transition:all 0.3s; white-space:nowrap;
 }
-.qa-q:hover { color:var(--cream); }
-.qa-arrow { color:var(--gold); opacity:0.45; font-size:0.75rem; flex-shrink:0; transition:transform 0.3s; }
-.qa-q.open .qa-arrow { transform:rotate(90deg); opacity:0.8; }
-.qa-ans {
-  display:none;
-  padding:0.2rem 0 2rem 1.5rem;
-  font-size:clamp(0.88rem,1.7vw,1rem);
-  line-height:2.2; letter-spacing:0.06em;
-  color:rgba(245,240,232,0.7);
-  border-left:1px solid rgba(200,169,110,0.15);
-}
-.qa-ans.open { display:block; animation:fadein 0.4s ease; }
-.qa-more-btn {
-  margin-top:1.2rem;
-  cursor:pointer;
-  font-size:0.62rem; letter-spacing:0.28em;
-  color:rgba(200,169,110,0.4);
-  border:none; background:none;
-  font-family:'Noto Serif TC',serif;
-  transition:color 0.3s;
-  display:block;
-}
-.qa-more-btn:hover { color:var(--gold); }
-.qa-book-reveal {
-  display:none;
-  margin-top:0.8rem;
-  animation:fadein 0.4s ease;
-}
-.qa-book-reveal.open { display:block; }
-.qa-book-title { font-size:0.68rem; letter-spacing:0.22em; color:var(--gold); margin-bottom:0.25rem; }
-.qa-book-author { font-size:0.6rem; letter-spacing:0.2em; color:var(--soft); margin-bottom:0.8rem; }
+.search-go:hover { border-color:var(--gold); background:rgba(200,169,110,0.07); }
+.search-go:disabled { opacity:0.4; cursor:not-allowed; }
 
-/* ══ WANDER SCREEN ══ */
+.ai-response {
+  font-size:clamp(0.9rem,1.8vw,1.03rem);
+  line-height:2.3; letter-spacing:0.06em;
+  color:rgba(245,240,232,0.76);
+  border-left:1px solid rgba(200,169,110,0.14);
+  padding-left:1.7rem;
+  min-height:3rem;
+  white-space:pre-wrap;
+}
+.ai-typing::after {
+  content:'▍'; animation:blink 1s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.ai-related { margin-top:2.5rem; }
+.ai-related-label { font-size:0.57rem; letter-spacing:0.4em; color:var(--soft); margin-bottom:1rem; }
+.ai-related-list { display:flex; flex-direction:column; gap:0.45rem; }
+
+/* ══ WANDER ══ */
 #sc-wander { background:var(--dark); }
 .wander-stage {
   min-height:calc(100vh - 38vh);
@@ -360,38 +332,47 @@ body {
   align-items:center; justify-content:center;
   padding:3rem clamp(1.5rem,8vw,6rem);
 }
-.wcard { max-width:500px; width:100%; text-align:center; }
+.wcard { max-width:480px; width:100%; text-align:center; }
 .wtext {
-  font-size:clamp(1rem,2.4vw,1.38rem);
-  line-height:2.1; letter-spacing:0.08em;
-  color:var(--cream);
-  margin-bottom:1.8rem;
+  font-size:clamp(1rem,2.3vw,1.35rem);
+  line-height:2.1; letter-spacing:0.08em; color:var(--cream);
+  margin-bottom:1.6rem;
   opacity:0; transform:translateY(10px);
   transition:opacity 0.8s ease, transform 0.8s ease;
 }
 .wtext.show { opacity:1; transform:translateY(0); }
-.wsrc {
-  font-size:0.62rem; letter-spacing:0.26em;
-  color:var(--gold); opacity:0;
-  margin-bottom:2.8rem;
-  transition:opacity 0.8s ease 0.3s;
+.w-src-toggle {
+  cursor:pointer; background:none; border:none;
+  color:rgba(200,169,110,0.32); font-family:'Noto Serif TC',serif;
+  font-size:0.6rem; letter-spacing:0.26em;
+  transition:color 0.3s; margin-bottom:2.5rem; display:block;
+  margin-left:auto; margin-right:auto;
+  opacity:0; transition:opacity 0.8s ease 0.3s, color 0.3s;
 }
-.wsrc.show { opacity:0.6; }
+.w-src-toggle.show { opacity:1; }
+.w-src-toggle:hover { color:var(--gold); }
+.w-src-reveal {
+  display:none; text-align:center;
+  padding:0.8rem 0 1.5rem; animation:fadein 0.45s ease;
+}
+.w-src-reveal.open { display:block; }
+.w-src-book { font-size:0.68rem; letter-spacing:0.22em; color:var(--gold); margin-bottom:0.2rem; }
+.w-src-author { font-size:0.58rem; letter-spacing:0.18em; color:var(--soft); margin-bottom:0.8rem; }
 .wnext {
   cursor:pointer; background:none;
-  border:1px solid rgba(200,169,110,0.28);
+  border:1px solid rgba(200,169,110,0.25);
   color:var(--gold-light);
-  font-family:'Noto Sans TC',sans-serif;
-  font-weight:200; font-size:0.72rem;
-  letter-spacing:0.3em; padding:0.65rem 2rem;
-  transition:all 0.3s;
+  font-family:'Noto Sans TC',sans-serif; font-weight:200;
+  font-size:0.7rem; letter-spacing:0.3em; padding:0.62rem 1.9rem;
+  transition:all 0.3s; margin-top:0.5rem;
 }
-.wnext:hover { border-color:var(--gold); background:rgba(200,169,110,0.07); }
+.wnext:hover { border-color:var(--gold); background:rgba(200,169,110,0.06); }
 
-@media(max-width:560px){
+@media(max-width:560px) {
   .mood-grid { grid-template-columns:1fr; }
-  .mb { width:220px; }
-  .cf-options { gap:0.55rem; }
+  .mb { width:210px; }
+  .search-input-row { flex-direction:column; align-items:stretch; }
+  .search-go { text-align:center; }
 }
 </style>
 </head>
@@ -415,7 +396,13 @@ body {
       <button class="mb" onclick="openArticle('self')">覺得自己不夠好</button>
     </div>
     <div class="wander-entry">
-      <button class="wander-link" onclick="openScreen('sc-wander')">🌿 或者，我只是想散散心</button>
+      <button class="wander-link" onclick="openScreen('sc-wander')">🌿 或者，我只是想走走</button>
+    </div>
+    <div class="landing-search-wrap">
+      <span class="landing-search-label">有什麼想不通的事？</span>
+      <input class="landing-search" id="landing-search-input"
+        placeholder="說說看，為什麼放不下、為什麼這麼累⋯⋯"
+        onkeydown="if(event.key==='Enter')doSearch()">
     </div>
   </div>
 </section>
@@ -424,36 +411,38 @@ body {
 <div class="screen" id="sc-article">
   <div class="back" onclick="closeScreen('sc-article')">← 回到入口</div>
   <div class="s-hero">
-    <div class="s-hero-bg" id="art-hero-bg"></div>
+    <div class="s-hero-bg"></div>
     <div class="s-hc">
       <p class="s-tag" id="art-tag"></p>
       <h2 class="s-title" id="art-title"></h2>
     </div>
   </div>
   <div class="art-wrap" id="art-content"></div>
-  <div class="continue-footer">
-    <p class="cf-label">你還想繼續走走嗎？</p>
-    <div class="cf-options">
-      <button class="cf-btn" onclick="openScreen('sc-qa')">🍂 看看別人的問題</button>
-      <button class="cf-btn" onclick="openScreen('sc-wander')">📖 漫遊花園</button>
-      <button class="cf-btn" onclick="loadRandom()">🕯 今晚再讀一段</button>
-    </div>
-  </div>
+  <div class="related-section" id="art-footer"></div>
 </div>
 
-<!-- ══ QA SCREEN ══ -->
-<div class="screen" id="sc-qa">
-  <div class="back" onclick="closeScreen('sc-qa')">← 回到入口</div>
+<!-- ══ AI SEARCH SCREEN ══ -->
+<div class="screen" id="sc-search">
+  <div class="back" onclick="closeScreen('sc-search')">← 回到入口</div>
   <div class="s-hero">
     <div class="s-hero-bg"></div>
     <div class="s-hc">
-      <p class="s-tag">人生問答</p>
-      <h2 class="s-title">說出你想不通的事</h2>
+      <p class="s-tag">心事搜尋</p>
+      <h2 class="s-title" id="search-hero-q">說出來</h2>
     </div>
   </div>
-  <div class="qa-wrap">
-    <input class="qa-search" id="qa-search" placeholder="搜尋你的問題⋯⋯" oninput="filterQA(this.value)">
-    <div id="qa-list"></div>
+  <div class="search-wrap">
+    <div class="search-input-row">
+      <input class="search-field" id="search-field"
+        placeholder="繼續問，或換一個問題⋯⋯"
+        onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="search-go" id="search-go-btn" onclick="doSearch()">送出</button>
+    </div>
+    <div class="ai-response" id="ai-response"></div>
+    <div class="ai-related" id="ai-related" style="display:none">
+      <p class="ai-related-label">你可能也想走走這條路</p>
+      <div class="ai-related-list" id="ai-related-list"></div>
+    </div>
   </div>
 </div>
 
@@ -470,7 +459,12 @@ body {
   <div class="wander-stage">
     <div class="wcard">
       <div class="wtext" id="wt"></div>
-      <div class="wsrc" id="ws"></div>
+      <button class="w-src-toggle" id="w-src-toggle" onclick="toggleWSrc()">想知道這句話從哪裡來？</button>
+      <div class="w-src-reveal" id="w-src-reveal">
+        <p class="w-src-book" id="w-src-book"></p>
+        <p class="w-src-author">作者：陳海倫</p>
+        <a class="src-buy" id="w-src-buy" href="#" target="_blank">閱讀更多 · 購書</a>
+      </div>
       <button class="wnext" onclick="nextWander()">繼續走 →</button>
     </div>
   </div>
@@ -483,134 +477,125 @@ const bgUrl = `url("data:image/jpeg;base64,${B64}")`;
 document.getElementById('bg').style.backgroundImage = bgUrl;
 document.querySelectorAll('.s-hero-bg').forEach(el => el.style.backgroundImage = bgUrl);
 
-// ── DATA ──
+// ── BOOKS ──
+const books = {
+  '生活藝術家':  { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '今天你幾歲？': { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '人生必修10堂課':{ link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '有情人':      { link:'https://www.iread.com.tw/Detail/ProdDetail/B000181176?biztype=1' },
+  '離婚黑皮書':  { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '遊走刀鋒的外遇':{ link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '做自己':      { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '自己站起來':  { link:'https://pia640210.github.io/creative-publisher/preorder.html' },
+  '夢想與妄想':  { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '如何愛你的父母':{ link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '說話的藝術':  { link:'https://www.books.com.tw/products/0010653583' },
+  '新娘訓練班':  { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '敗犬站起來':  { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+  '追愛':        { link:'https://pia640210.github.io/creative-publisher/purchase.html' },
+};
+
+// ── MOOD DATA ──
 const moods = {
   tired: {
     tag:'安靜一下', title:'你不需要馬上想清楚',
+    related:['lonely','lost','anxious'],
+    relatedLabel:['很孤單','不知道方向','很焦慮'],
     articles:[
-      { n:'一', text:'你問自己，為什麼這麼累。<br><br>但或許這個問題本身就太重了。<br>累，不一定需要原因。<br>有時候就只是——活著，認真活著，<br>就已經用盡了全部。<br><br>今天，允許自己只是坐著。<br>不解釋，不計畫，不追問。<br>光是還在，就已經夠了。',
-        book:'《生活藝術家》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'走錯了路，還是走慢了路？<br><br>大多數時候，我們以為自己走錯了，<br>其實只是走得比預期慢一點。<br>而那個「預期」，是誰定的？<br><br>生命沒有標準時刻表。<br>那個讓你焦慮的比較，<br>很可能根本不是你的故事。',
-        book:'《今天你幾歲？》', author:'作者：陳海倫', link:'#' },
-      { n:'三', text:'你問自己還有多少力氣。<br><br>這個問題，說明你還在乎。<br>真正耗盡的人，不會再問了。<br><br>能夠問出這句話的人，<br>還有一口氣在裡面——<br>那口氣，叫做想要更好。<br><br>先喝口水。<br>其他的，等一下再說。',
-        book:'《人生必修10堂課》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'你問自己，為什麼這麼累。\n\n但或許這個問題本身就太重了。\n累，不一定需要原因。\n有時候就只是——活著，認真活著，\n就已經用盡了全部。\n\n今天，允許自己只是坐著。\n不解釋，不計畫，不追問。\n光是還在，就已經夠了。', book:'生活藝術家' },
+      { n:'二', text:'走錯了路，還是走慢了路？\n\n大多數時候，我們以為自己走錯了，\n其實只是走得比預期慢一點。\n而那個「預期」，是誰定的？\n\n生命沒有標準時刻表。\n那個讓你焦慮的比較，\n很可能根本不是你的故事。', book:'今天你幾歲？' },
+      { n:'三', text:'你問自己還有多少力氣。\n\n這個問題，說明你還在乎。\n真正耗盡的人，不會再問了。\n\n能夠問出這句話的人，\n還有一口氣在裡面——\n那口氣，叫做想要更好。\n\n先喝口水。\n其他的，等一下再說。', book:'人生必修10堂課' }
     ]
   },
   lonely: {
     tag:'安靜一下', title:'今天，只是想被陪著',
+    related:['tired','self','hurt'],
+    relatedLabel:['很累','覺得自己不夠好','很委屈'],
     articles:[
-      { n:'一', text:'孤單，不是沒有人。<br><br>是周圍有很多人，<br>但沒有一個人，<br>讓你覺得可以說真話。<br><br>這種孤單，比一個人更累。',
-        book:'《生活藝術家》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'有些話，不是不想說，<br>是不知道怎麼開口。<br><br>說出來，怕被誤解。<br>不說，又悶在心裡。<br><br>你現在需要的，<br>也許不是答案，<br>只是有人，安靜地陪著你坐一下。',
-        book:'《人生必修10堂課》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'孤單，不是沒有人。\n\n是周圍有很多人，\n但沒有一個人，\n讓你覺得可以說真話。\n\n這種孤單，比一個人更累。', book:'生活藝術家' },
+      { n:'二', text:'有些話，不是不想說，\n是不知道怎麼開口。\n\n說出來，怕被誤解。\n不說，又悶在心裡。\n\n你現在需要的，\n也許不是答案，\n只是有人，安靜地陪著你坐一下。', book:'人生必修10堂課' }
     ]
   },
   anxious: {
     tag:'安靜一下', title:'讓自己先停下來',
+    related:['tired','lost','self'],
+    relatedLabel:['很累','不知道方向','覺得自己不夠好'],
     articles:[
-      { n:'一', text:'焦慮，是因為你想要把每件事都控制好。<br><br>但有些事，就是不在你的控制範圍裡。<br><br>你能做的，已經做了。<br>剩下的，讓它去。<br><br>深呼吸。<br>先把今天，過完。',
-        book:'《人生必修10堂課》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'靜不下來，<br>是因為一停下來，<br>那些不想面對的事，就會跑出來。<br><br>但它們不會因為你不停下來，就消失。<br><br>停下來。<br>看清楚它。<br>它比你以為的，小一點。',
-        book:'《生活藝術家》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'焦慮，是因為你想要把每件事都控制好。\n\n但有些事，就是不在你的控制範圍裡。\n\n你能做的，已經做了。\n剩下的，讓它去。\n\n深呼吸。\n先把今天，過完。', book:'人生必修10堂課' },
+      { n:'二', text:'靜不下來，\n是因為一停下來，\n那些不想面對的事，就會跑出來。\n\n但它們不會因為你不停下來，就消失。\n\n停下來。\n看清楚它。\n它比你以為的，小一點。', book:'生活藝術家' }
     ]
   },
   lost: {
     tag:'找回自己', title:'你沒有消失，只是走遠了一點',
+    related:['self','tired','anxious'],
+    relatedLabel:['覺得自己不夠好','很累','很焦慮'],
     articles:[
-      { n:'一', text:'你不知道自己想要什麼。<br><br>這不是問題。<br>這是一個開始。<br><br>知道「不想要什麼」，<br>就已經是一種清醒。<br>不想繼續麻木，<br>不想再假裝沒關係——<br>這樣的你，其實很清楚自己在哪裡。',
-        book:'《做自己》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'活得不像自己。<br><br>那個「不像自己」的感覺，<br>正說明你心裡還有一個「自己的樣子」存在。<br><br>那個輪廓，沒有消失。<br>只是被很多層生活蓋住了。<br><br>往下找。它在的。',
-        book:'《自己站起來》', author:'作者：陳海倫', link:'#' },
-      { n:'三', text:'一直在為別人活。<br><br>你付出的那些，不是假的。<br>但付出不等於活著。<br><br>有一天，當所有人都不需要你了，<br>你還知道自己要去哪裡嗎？<br><br>現在開始練習——<br>每天問自己一個小問題：<br>「我今天有沒有做了一件，只是為我自己的事？」',
-        book:'《夢想與妄想》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'你不知道自己想要什麼。\n\n這不是問題。\n這是一個開始。\n\n知道「不想要什麼」，\n就已經是一種清醒。\n不想繼續麻木，\n不想再假裝沒關係——\n這樣的你，其實很清楚自己在哪裡。', book:'做自己' },
+      { n:'二', text:'活得不像自己。\n\n那個「不像自己」的感覺，\n正說明你心裡還有一個「自己的樣子」存在。\n\n那個輪廓，沒有消失。\n只是被很多層生活蓋住了。\n\n往下找。它在的。', book:'自己站起來' },
+      { n:'三', text:'一直在為別人活。\n\n你付出的那些，不是假的。\n但付出不等於活著。\n\n有一天，當所有人都不需要你了，\n你還知道自己要去哪裡嗎？\n\n現在開始練習——\n每天問自己一個小問題：\n「我今天有沒有做了一件，只是為我自己的事？」', book:'夢想與妄想' }
     ]
   },
   hurt: {
     tag:'理清感情', title:'有些委屈，說不清楚，但是真的',
+    related:['love','lonely','self'],
+    relatedLabel:['感情卡住了','很孤單','覺得自己不夠好'],
     articles:[
-      { n:'一', text:'委屈，有時候不是因為別人做錯了什麼。<br><br>是因為你一直在給，<br>給到最後，忘了自己也需要被接住。<br><br>那個委屈，是真的。<br>你不需要說服自己沒關係。',
-        book:'《有情人》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'說不出口，<br>不代表不重要。<br><br>有些傷，就是在最安靜的地方，<br>最深。',
-        book:'《離婚黑皮書》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'委屈，有時候不是因為別人做錯了什麼。\n\n是因為你一直在給，\n給到最後，忘了自己也需要被接住。\n\n那個委屈，是真的。\n你不需要說服自己沒關係。', book:'有情人' },
+      { n:'二', text:'說不出口，\n不代表不重要。\n\n有些傷，就是在最安靜的地方，\n最深。', book:'離婚黑皮書' }
     ]
   },
   love: {
     tag:'理清感情', title:'有些話說不出口，才最重',
+    related:['hurt','relation','lonely'],
+    relatedLabel:['很委屈','關係讓我窒息','很孤單'],
     articles:[
-      { n:'一', text:'明明愛，但很累。<br><br>這兩件事，可以同時是真的。<br>愛一個人，不代表和那個人在一起就輕盈。<br>有時候，疲憊正是因為愛得太用力——<br>用盡全力想讓對方快樂，<br>卻忘了問自己，還好嗎？<br><br>有些東西，不是抓緊才是愛。<br>鬆手，是另一種在。',
-        book:'《有情人》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'不知道該繼續，還是放手。<br><br>繼續，不一定是勇敢。<br>放手，不一定是放棄。<br><br>最難的不是做決定，<br>是在還沒有答案的時候，<br>學會和這個「不知道」坐在一起。<br><br>它會告訴你。<br>不是今天，但它會的。',
-        book:'《離婚黑皮書》', author:'作者：陳海倫', link:'#' },
-      { n:'三', text:'愛上了不應該愛的人。<br><br>「不應該」——這三個字裡，<br>住著多少人的故事。<br><br>感情沒有應不應該，<br>只有能不能承受。<br>你現在承受著的，<br>比你自己以為的，重得多。<br><br>請你溫柔地對待那個正在承受的自己。',
-        book:'《遊走刀鋒的外遇》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'明明愛，但很累。\n\n這兩件事，可以同時是真的。\n愛一個人，不代表和那個人在一起就輕盈。\n有時候，疲憊正是因為愛得太用力——\n用盡全力想讓對方快樂，\n卻忘了問自己，還好嗎？\n\n有些東西，不是抓緊才是愛。\n鬆手，是另一種在。', book:'有情人' },
+      { n:'二', text:'不知道該繼續，還是放手。\n\n繼續，不一定是勇敢。\n放手，不一定是放棄。\n\n最難的不是做決定，\n是在還沒有答案的時候，\n學會和這個「不知道」坐在一起。\n\n它會告訴你。\n不是今天，但它會的。', book:'離婚黑皮書' },
+      { n:'三', text:'愛上了不應該愛的人。\n\n「不應該」——這三個字裡，\n住著多少人的故事。\n\n感情沒有應不應該，\n只有能不能承受。\n你現在承受著的，\n比你自己以為的，重得多。\n\n請你溫柔地對待那個正在承受的自己。', book:'遊走刀鋒的外遇' }
     ]
   },
   relation: {
     tag:'面對關係', title:'最近的距離有時候最難跨越',
+    related:['love','hurt','tired'],
+    relatedLabel:['感情卡住了','很委屈','很累'],
     articles:[
-      { n:'一', text:'愛他們，但待在一起很窒息。<br><br>愛是真的。窒息也是真的。<br>這兩件事不互相矛盾，<br>只是說明一件事：<br>愛，需要空間才能呼吸。<br><br>你需要距離，不是因為你不愛。<br>是因為你想讓這份愛，留得更久一點。',
-        book:'《如何愛你的父母》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'說的話總是傷到人，但不是故意的。<br><br>語言是習慣，<br>習慣來自我們從小被對待的方式。<br><br>你說話的模式，<br>很可能是你學來的，不是你選的。<br>知道這一點，是改變的第一步。',
-        book:'《說話的藝術》', author:'作者：陳海倫', link:'#' },
-      { n:'三', text:'不知道怎麼靠近他。<br><br>靠近，不一定從話語開始。<br>有時候是一個眼神，<br>一次沒有目的的陪伴，<br>一頓默默坐在旁邊的飯。<br><br>關係的修復，很少發生在大聲的時刻。<br>它悄悄地，<br>發生在你以為什麼都沒發生的地方。',
-        book:'《新娘訓練班》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'愛他們，但待在一起很窒息。\n\n愛是真的。窒息也是真的。\n這兩件事不互相矛盾，\n只是說明一件事：\n愛，需要空間才能呼吸。\n\n你需要距離，不是因為你不愛。\n是因為你想讓這份愛，留得更久一點。', book:'如何愛你的父母' },
+      { n:'二', text:'說的話總是傷到人，但不是故意的。\n\n語言是習慣，\n習慣來自我們從小被對待的方式。\n\n你說話的模式，\n很可能是你學來的，不是你選的。\n知道這一點，是改變的第一步。', book:'說話的藝術' },
+      { n:'三', text:'不知道怎麼靠近他。\n\n靠近，不一定從話語開始。\n有時候是一個眼神，\n一次沒有目的的陪伴，\n一頓默默坐在旁邊的飯。\n\n關係的修復，很少發生在大聲的時刻。\n它悄悄地，\n發生在你以為什麼都沒發生的地方。', book:'新娘訓練班' }
     ]
   },
   self: {
     tag:'找回自己', title:'你沒有消失，只是走遠了一點',
+    related:['lost','tired','lonely'],
+    relatedLabel:['不知道方向','很累','很孤單'],
     articles:[
-      { n:'一', text:'覺得自己不夠好，<br>其實是因為你的標準，比別人的眼光還嚴。<br><br>你在乎的，比大多數人更多。<br>這不是弱點，這是敏感度。<br><br>只是你忘了，<br>也要對自己，一樣溫柔。',
-        book:'《做自己》', author:'作者：陳海倫', link:'#' },
-      { n:'二', text:'那個輪廓，沒有消失。<br>只是被很多層生活蓋住了。<br><br>往下找。它在的。',
-        book:'《自己站起來》', author:'作者：陳海倫', link:'#' }
+      { n:'一', text:'覺得自己不夠好，\n其實是因為你的標準，比別人的眼光還嚴。\n\n你在乎的，比大多數人更多。\n這不是弱點，這是敏感度。\n\n只是你忘了，\n也要對自己，一樣溫柔。', book:'做自己' },
+      { n:'二', text:'那個輪廓，沒有消失。\n只是被很多層生活蓋住了。\n\n往下找。它在的。', book:'自己站起來' }
     ]
   }
 };
 
-const qaData = [
-  { q:'為什麼我總是忍不住討好別人？',
-    a:'討好別人的背後，常常藏著一個更深的恐懼——害怕如果不配合，就會失去那個人的喜愛。<br><br>這個模式，很多時候是從小學來的。你學會了「只要我夠好、夠乖、夠用，我就是安全的」。<br><br>但那個安全，是有條件的。<br><br>下一次當你想妥協的時候，先問一下自己：<br>「這是我真的想做的，還是我害怕說不？」',
-    book:'《做自己》', author:'作者：陳海倫', link:'#' },
-  { q:'為什麼明明很努力，卻還是不快樂？',
-    a:'努力，和快樂，有時候指向不同的方向。<br><br>我們努力的，往往是別人認為重要的事。<br>我們快樂的，往往是那些說不清楚、看起來沒有用的時刻。<br><br>試著問自己：<br>「我最近做了什麼事，是不為任何結果，只是喜歡？」<br><br>那個答案，就是你的方向。',
-    book:'《夢想與妄想》', author:'作者：陳海倫', link:'#' },
-  { q:'怎麼停止內耗？',
-    a:'內耗，發生在你同時想要兩件事，但又說服自己「我不應該要那個」。<br><br>你想休息，但又覺得休息是浪費時間。<br>你想說不，但又覺得說不會傷害對方。<br><br>停止內耗的方法，不是更努力想清楚。<br>而是，承認那兩個聲音都是你的，然後選一個，先走。',
-    book:'《人生必修10堂課》', author:'作者：陳海倫', link:'#' },
-  { q:'如何放下前任？',
-    a:'你不是放不下那個人。<br><br>你放不下的，是那段時間裡的自己——<br>那個被愛著的自己，那個以為找到了答案的自己。<br><br>放下，不是把那段記憶刪除。<br>是允許它存在，但不讓它繼續決定你現在怎麼活。<br><br>它結束了。你還在。這就夠了。',
-    book:'《離婚黑皮書》', author:'作者：陳海倫', link:'#' },
-  { q:'為什麼我總是無法拒絕別人？',
-    a:'說不，對很多人來說，感覺像是一種攻擊。<br><br>但說不，其實是一種自我尊重。<br><br>你的時間、精力、心情——都有限。<br>每一次你說「好」但心裡說「不」，你就是在透支自己。<br><br>練習說不，從小事開始。<br>「不好意思，這次沒辦法。」<br>就這一句。不需要解釋。',
-    book:'《說話的藝術》', author:'作者：陳海倫', link:'#' },
-  { q:'怎麼跟父母相處，又不失去自己？',
-    a:'和父母的關係，最難的地方在於：<br>你愛他們，但你也需要做自己。<br><br>愛，不等於完全配合。<br>有時候，最愛一個人的方式，<br>是維持一個讓彼此都能呼吸的距離。<br><br>你不是不孝順，你只是也需要空間。',
-    book:'《如何愛你的父母》', author:'作者：陳海倫', link:'#' },
-  { q:'我活得不像自己，怎麼辦？',
-    a:'那個「不像自己」的感覺，是一個重要的信號。<br><br>它說明，你心裡還有一個「自己應該是什麼樣子」的輪廓存在。<br><br>不需要馬上找到答案。<br>只需要開始問：<br>「哪一刻，我感覺最像自己？」<br><br>從那裡開始找回來。',
-    book:'《自己站起來》', author:'作者：陳海倫', link:'#' },
-];
-
+// ── WANDER CARDS ──
 const wanderCards = [
-  { text:'有些人不是不愛你。<br>只是他連自己都還沒學會愛。', src:'《有情人》' },
-  { text:'討好別人的背後，<br>常常藏著害怕失去。', src:'《做自己》' },
-  { text:'你不是放不下那個人，<br>你只是放不下那個時候的自己。', src:'《離婚黑皮書》' },
-  { text:'累，不一定需要原因。<br>有時候就只是——認真活著，<br>就已經用盡了全部。', src:'《生活藝術家》' },
-  { text:'那個輪廓，沒有消失。<br>只是被很多層生活蓋住了。<br>往下找。它在的。', src:'《自己站起來》' },
-  { text:'繼續，不一定是勇敢。<br>放手，不一定是放棄。', src:'《離婚黑皮書》' },
-  { text:'愛，需要空間才能呼吸。<br>你需要距離，不是因為你不愛。<br>是因為你想讓這份愛，留得更久一點。', src:'《如何愛你的父母》' },
-  { text:'生命沒有標準時刻表。<br>那個讓你焦慮的比較，<br>很可能根本不是你的故事。', src:'《今天你幾歲？》' },
-  { text:'關係的修復，很少發生在大聲的時刻。<br>它悄悄地，<br>發生在你以為什麼都沒發生的地方。', src:'《新娘訓練班》' },
-  { text:'你問自己還有多少力氣。<br>這個問題，說明你還在乎。<br>真正耗盡的人，不會再問了。', src:'《人生必修10堂課》' },
-  { text:'付出不等於活著。<br><br>有一天，當所有人都不需要你了，<br>你還知道自己要去哪裡嗎？', src:'《夢想與妄想》' },
+  { text:'有些人不是不愛你。\n只是他連自己都還沒學會愛。', book:'有情人' },
+  { text:'討好別人的背後，\n常常藏著害怕失去。', book:'做自己' },
+  { text:'你不是放不下那個人，\n你只是放不下那個時候的自己。', book:'離婚黑皮書' },
+  { text:'累，不一定需要原因。\n有時候就只是——認真活著，\n就已經用盡了全部。', book:'生活藝術家' },
+  { text:'那個輪廓，沒有消失。\n只是被很多層生活蓋住了。\n往下找。它在的。', book:'自己站起來' },
+  { text:'繼續，不一定是勇敢。\n放手，不一定是放棄。', book:'離婚黑皮書' },
+  { text:'愛，需要空間才能呼吸。\n你需要距離，不是因為你不愛。\n是因為你想讓這份愛，留得更久一點。', book:'如何愛你的父母' },
+  { text:'生命沒有標準時刻表。\n那個讓你焦慮的比較，\n很可能根本不是你的故事。', book:'今天你幾歲？' },
+  { text:'關係的修復，很少發生在大聲的時刻。\n它悄悄地，\n發生在你以為什麼都沒發生的地方。', book:'新娘訓練班' },
+  { text:'你問自己還有多少力氣。\n這個問題，說明你還在乎。\n真正耗盡的人，不會再問了。', book:'人生必修10堂課' },
+  { text:'付出不等於活著。\n\n有一天，當所有人都不需要你了，\n你還知道自己要去哪裡嗎？', book:'夢想與妄想' },
+  { text:'說不出口，不代表不重要。\n有些傷，就是在最安靜的地方，最深。', book:'離婚黑皮書' },
 ];
 
 // ── SCREEN CONTROL ──
 function openScreen(id) {
   document.getElementById(id).classList.add('active');
   document.body.style.overflow = 'hidden';
-  if(id === 'sc-wander') initWander();
-  if(id === 'sc-qa') renderQA('');
+  if(id==='sc-wander') initWander();
 }
 function closeScreen(id) {
   document.getElementById(id).classList.remove('active');
@@ -622,97 +607,147 @@ function openArticle(mood) {
   const d = moods[mood];
   document.getElementById('art-tag').textContent = d.tag;
   document.getElementById('art-title').textContent = d.title;
-  let html = '';
-  d.articles.forEach((a, i) => {
-    html += `
+
+  // Build articles
+  let artHtml = '';
+  d.articles.forEach((a,i) => {
+    const bk = books[a.book] || { link:'#' };
+    artHtml += `
     <div class="article" style="transition-delay:${i*0.15}s">
       <p class="art-n">${a.n}</p>
-      <div class="art-text">${a.text}</div>
-      <button class="more-btn" onclick="revealBook(this)">我想知道更多 ↓</button>
-      <div class="book-reveal">
-        <p class="book-title">${a.book}</p>
-        <p class="book-author">${a.author}</p>
-        <a class="buy-btn" href="${a.link}" target="_blank">閱讀更多 · 購書</a>
+      <div class="art-text">${a.text.replace(/\n/g,'<br>')}</div>
+      <button class="src-toggle" onclick="toggleSrc(this)">想知道這段話從哪裡來？</button>
+      <div class="src-reveal">
+        <p class="src-book">《${a.book}》</p>
+        <p class="src-author">作者：陳海倫</p>
+        <a class="src-buy" href="${bk.link}" target="_blank">閱讀更多 · 購書</a>
       </div>
     </div>`;
-    if(i < d.articles.length - 1) html += '<div class="adiv"></div>';
+    if(i < d.articles.length-1) artHtml += '<div class="adiv"></div>';
   });
-  document.getElementById('art-content').innerHTML = html;
+  document.getElementById('art-content').innerHTML = artHtml;
+
+  // Build footer: related + continue
+  let footHtml = `<p class="related-label">你可能還想走走</p><div class="related-list">`;
+  d.related.forEach((r,i) => {
+    footHtml += `<button class="rel-btn" onclick="openArticle('${r}')">${d.relatedLabel[i]}</button>`;
+  });
+  footHtml += `</div>
+  <p class="continue-label">或者</p>
+  <div class="continue-list">
+    <button class="cf-btn" onclick="openScreen('sc-wander')">🌿 漫遊花園</button>
+    <button class="cf-btn" onclick="openScreen('sc-search'); document.getElementById('search-field').focus()">🍂 說說你想不通的事</button>
+    <button class="cf-btn" onclick="openArticle(randomMood('${mood}'))">🕯 今晚再讀一段</button>
+  </div>`;
+  document.getElementById('art-footer').innerHTML = footHtml;
+
   openScreen('sc-article');
   setTimeout(() => {
-    document.querySelectorAll('#sc-article .article').forEach((el, i) => {
-      setTimeout(() => el.classList.add('vis'), i * 160);
+    document.querySelectorAll('#sc-article .article').forEach((el,i) => {
+      setTimeout(() => el.classList.add('vis'), i*160);
     });
   }, 350);
 }
 
-function revealBook(btn) {
+function toggleSrc(btn) {
   const reveal = btn.nextElementSibling;
   reveal.classList.toggle('open');
-  btn.textContent = reveal.classList.contains('open') ? '收起 ↑' : '我想知道更多 ↓';
+  btn.textContent = reveal.classList.contains('open') ? '收起' : '想知道這段話從哪裡來？';
 }
 
-function loadRandom() {
-  const keys = Object.keys(moods);
-  const rand = keys[Math.floor(Math.random() * keys.length)];
-  // clear current and reload
-  closeScreen('sc-article');
-  setTimeout(() => openArticle(rand), 100);
+function randomMood(exclude) {
+  const keys = Object.keys(moods).filter(k => k!==exclude);
+  return keys[Math.floor(Math.random()*keys.length)];
 }
 
-// ── QA ──
-function renderQA(filter) {
-  const list = filter
-    ? qaData.filter(q => q.q.includes(filter) || q.a.includes(filter))
-    : qaData;
-  document.getElementById('qa-list').innerHTML = list.map((item, i) => `
-    <div class="qa-item">
-      <div class="qa-q" onclick="toggleQA(this, 'qans${i}')">
-        ${item.q}<span class="qa-arrow">→</span>
-      </div>
-      <div class="qa-ans" id="qans${i}">
-        ${item.a}
-        <button class="qa-more-btn" onclick="revealQABook(this)">我想知道更多 ↓</button>
-        <div class="qa-book-reveal">
-          <p class="qa-book-title">${item.book}</p>
-          <p class="qa-book-author">${item.author}</p>
-          <a class="buy-btn" href="${item.link}" target="_blank">閱讀更多 · 購書</a>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-function filterQA(val) { renderQA(val); }
-function toggleQA(el, ansId) {
-  const ans = document.getElementById(ansId);
-  ans.classList.toggle('open');
-  el.classList.toggle('open');
-}
-function revealQABook(btn) {
-  const reveal = btn.nextElementSibling;
-  reveal.classList.toggle('open');
-  btn.textContent = reveal.classList.contains('open') ? '收起 ↑' : '我想知道更多 ↓';
+// ── AI SEARCH ──
+// Replace this URL with your Zeabur backend URL after deployment
+const API_ENDPOINT = 'https://xinjianci-api.zeabur.app/ask';
+
+function doSearch() {
+  const landingInput = document.getElementById('landing-search-input');
+  const fieldInput = document.getElementById('search-field');
+  const q = (document.getElementById('sc-search').classList.contains('active')
+    ? fieldInput.value : landingInput.value).trim();
+  if(!q) return;
+
+  // Open search screen
+  if(!document.getElementById('sc-search').classList.contains('active')) {
+    document.getElementById('search-hero-q').textContent = q;
+    openScreen('sc-search');
+    fieldInput.value = q;
+  } else {
+    document.getElementById('search-hero-q').textContent = q;
+  }
+
+  const respEl = document.getElementById('ai-response');
+  const relatedEl = document.getElementById('ai-related');
+  const relatedList = document.getElementById('ai-related-list');
+  const goBtn = document.getElementById('search-go-btn');
+
+  respEl.textContent = '';
+  respEl.classList.add('ai-typing');
+  relatedEl.style.display = 'none';
+  goBtn.disabled = true;
+
+  fetch(API_ENDPOINT, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ question: q })
+  })
+  .then(r => r.json())
+  .then(data => {
+    respEl.classList.remove('ai-typing');
+    respEl.innerHTML = (data.answer || '').replace(/\n/g,'<br>');
+    goBtn.disabled = false;
+    fieldInput.value = '';
+
+    // Show related moods
+    if(data.related && data.related.length) {
+      relatedList.innerHTML = data.related.map(r =>
+        `<button class="rel-btn" onclick="openArticle('${r.mood}')">${r.label}</button>`
+      ).join('');
+      relatedEl.style.display = 'block';
+    }
+  })
+  .catch(() => {
+    respEl.classList.remove('ai-typing');
+    respEl.innerHTML = '這裡的網路暫時不穩定。\n先停一下，或者換個問題試試看。';
+    goBtn.disabled = false;
+  });
 }
 
 // ── WANDER ──
 let wIdx = 0;
 function initWander() {
-  wIdx = Math.floor(Math.random() * wanderCards.length);
+  wIdx = Math.floor(Math.random()*wanderCards.length);
   showWCard();
 }
 function showWCard() {
   const wt = document.getElementById('wt');
-  const ws = document.getElementById('ws');
-  wt.classList.remove('show'); ws.classList.remove('show');
+  const tog = document.getElementById('w-src-toggle');
+  const rev = document.getElementById('w-src-reveal');
+  wt.classList.remove('show'); tog.classList.remove('show');
+  rev.classList.remove('open');
+  tog.textContent = '想知道這句話從哪裡來？';
   setTimeout(() => {
-    wt.innerHTML = wanderCards[wIdx].text;
-    ws.textContent = '來自 ' + wanderCards[wIdx].src;
-    wt.classList.add('show'); ws.classList.add('show');
+    wt.innerHTML = wanderCards[wIdx].text.replace(/\n/g,'<br>');
+    document.getElementById('w-src-book').textContent = '《' + wanderCards[wIdx].book + '》';
+    const bk = books[wanderCards[wIdx].book] || { link:'#' };
+    document.getElementById('w-src-buy').href = bk.link;
+    wt.classList.add('show');
+    setTimeout(() => tog.classList.add('show'), 300);
   }, 220);
 }
 function nextWander() {
-  wIdx = (wIdx + 1) % wanderCards.length;
+  wIdx = (wIdx+1) % wanderCards.length;
   showWCard();
+}
+function toggleWSrc() {
+  const rev = document.getElementById('w-src-reveal');
+  const tog = document.getElementById('w-src-toggle');
+  rev.classList.toggle('open');
+  tog.textContent = rev.classList.contains('open') ? '收起' : '想知道這句話從哪裡來？';
 }
 </script>
 </body>
