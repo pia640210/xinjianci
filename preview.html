@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心間隙｜城市裡，一條通往內心的秘徑</title>
+<style>
+body{margin:0;font-family:serif;background:#08100d;color:#f2f1eb}
+.hero{height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
+.hero:before{content:'';position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.7)),url('background.jpg') center/cover}
+.hero>*{position:relative;z-index:1}
+.wrap{max-width:800px;padding:20px}
+h1{font-size:4rem;font-weight:300}
+a.btn{display:inline-block;margin-top:30px;padding:12px 24px;border:1px solid #ccc;color:#fff;text-decoration:none}
+.section{padding:100px 20px;max-width:1000px;margin:auto;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{padding:24px;border:1px solid rgba(255,255,255,.1);cursor:pointer}
+#paper{margin-top:30px;padding:30px;border:1px solid rgba(255,255,255,.1);display:none}
+.library{background:#111917}
+</style>
+</head>
+<body>
+<section class="hero">
+<div class="wrap">
+<h1>心間隙</h1>
+<p>城市裡，一條通往內心的秘徑</p>
+<p>有些答案，不是向外尋找，而是在安靜下來之後慢慢浮現。</p>
+<a class="btn" href="#path">進入秘徑</a>
+</div>
+</section>
+
+<section id="path" class="section">
+<h2>今晚，是什麼把你帶來這裡？</h2>
+<div class="grid">
+<div class="card" onclick="q(0)">我有點累</div>
+<div class="card" onclick="q(1)">我不知道方向</div>
+<div class="card" onclick="q(2)">我想重新開始</div>
+<div class="card" onclick="q(3)">我想更了解自己</div>
+<div class="card" onclick="q(4)">我放不下一段關係</div>
+<div class="card" onclick="q(5)">我想回家</div>
+</div>
+<div id="paper"></div>
+</section>
+
+<section class="section library">
+<h2>森林圖書館</h2>
+<p>這些文字來自關於人生、關係與成長的故事。</p>
+<div class="grid">
+<div class="card">自己站起來</div>
+<div class="card">做自己</div>
+<div class="card">有情人</div>
+<div class="card">如何愛你的父母</div>
+<div class="card">說話的藝術</div>
+<div class="card">我是如何失敗的</div>
+</div>
+</section>
+
+<script>
+const data=[
+'你不需要一直往前衝。有時候停下來，本身就是一種前進。',
+'迷路的時候，不要急著奔跑，先確認自己站在哪裡。',
+'每一次重新開始，都是生命送給你的另一個春天。',
+'真正的自己，是慢慢移除那些不屬於你的東西。',
+'愛不是抓緊，而是在理解之後依然願意靠近。',
+'有些人一直在尋找家，最後才發現家就在心裡。'
+];
+function q(i){
+const p=document.getElementById('paper');
+p.style.display='block';
+p.innerHTML=data[i];
+}
+</script>
+</body>
+</html>
