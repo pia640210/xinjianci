@@ -7,10 +7,11 @@
 <meta name="description" content="心間隙——城市裡，一條通往內心的秘徑。有些答案，不是向外尋找，而是在安靜下來之後，慢慢浮現。">
 <meta property="og:title" content="心間隙｜城市裡，一條通往內心的秘徑">
 <meta property="og:description" content="有些答案，不是向外尋找。而是在安靜下來之後，慢慢浮現。">
-<meta property="og:image" content="images/background.jpg">
+<meta property="og:image" content="background.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<!-- 修正字體載入方式，移除 display=swap 避免字體閃爍殘影 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Noto+Sans+TC:wght@300;400" rel="stylesheet">
 <style>
 :root{
   --bg:#0f1210;
@@ -28,8 +29,12 @@ body{font-family:'Noto Serif TC','PingFang TC',serif;color:var(--text)}
 /* BG */
 .bg-layer{
   position:fixed;inset:0;z-index:0;
-  background:url('background.jpg') center/cover no-repeat fixed;
+  /* 移除原本的 fixed，避免與外層 position:fixed 衝突 */
+  background:url('background.jpg') center/cover no-repeat;
   animation:breathe 14s ease-in-out infinite;
+  /* 強制硬體加速，消除濾鏡動畫造成的殘影 */
+  transform: translateZ(0);
+  will-change: filter;
 }
 @keyframes breathe{
   0%,100%{filter:brightness(0.32) saturate(0.65)}
@@ -71,6 +76,11 @@ body{font-family:'Noto Serif TC','PingFang TC',serif;color:var(--text)}
   padding:8px 4px;
 }
 .screen-inner::-webkit-scrollbar{display:none}
+
+/* 加入硬體加速，確保進場滑順 */
+.brand, .brand-tag, .daily-strip, .entrance-poem, .btn-enter {
+  will-change: opacity, transform;
+}
 
 /* ── ENTRANCE ── */
 .brand{
