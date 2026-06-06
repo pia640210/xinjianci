@@ -1,155 +1,36 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>心間隙｜城市裡，一條通往內心的秘徑</title>
-<meta name="description" content="心間隙——城市裡，一條通往內心的秘徑。有些答案，不是向外尋找，而是在安靜下來之後，慢慢浮現。">
-<meta property="og:title" content="心間隙｜城市裡，一條通往內心的秘徑">
-<meta property="og:description" content="有些答案，不是向外尋找。而是在安靜下來之後，慢慢浮現。">
-<meta property="og:image" content="background.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Noto+Sans+TC:wght@300;400" rel="stylesheet">
-<style>
-:root{
-  --bg:#0f1210;
-  --text:#e3e8e5;
-  --dim:#a0b5a8;
-  --gold:#c8b470;
-  --moss:#587261;
-  --paper:#f7f4eb;
-  --paper-text:#2a3028;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg)}
-body{font-family:'Noto Serif TC','PingFang TC',serif;color:var(--text)}
+  {keywords:['工作','壓力','老闆','職場'],reply:'真正的成功，
+從來不需要向世界證明什麼，
+而是你能在每個當下，
+真誠地感到快樂。',q:'這份工作裡，有沒有哪一個部分，是你還沒有放棄的熱情？',book:'《我是如何失敗的》'},
+  {keywords:['愛','喜歡','感情','關係'],reply:'愛，不是一場尋找完美的追逐，
+而是一趟喚醒靈魂的歸途。',q:'在這段關係裡，你有沒有看見更真實的自己？',book:'《有情人》'},
+];
+const defaultReply={reply:'森林裡的風吹過，
+正在靜靜傾聽。
 
-/* BG */
-.bg-layer{
-  position:fixed;inset:0;z-index:0;
-  background:url('background.jpg') center/cover no-repeat;
-  animation:breathe 14s ease-in-out infinite;
-  transform: translateZ(0);
-  will-change: filter;
-}
-@keyframes breathe{
-  0%,100%{filter:brightness(0.32) saturate(0.65)}
-  50%{filter:brightness(0.42) saturate(0.8)}
-}
-.bg-overlay{
-  position:fixed;inset:0;z-index:1;
-  background:
-    radial-gradient(ellipse 60% 80% at 50% 45%,transparent 10%,rgba(15,18,16,0.55) 100%),
-    linear-gradient(to bottom,rgba(15,18,16,0.7) 0%,transparent 20%,transparent 70%,rgba(15,18,16,0.95) 100%);
-  pointer-events:none;
+你說的每一個字，
+這裡都接住了。',q:'有時候，把心事說出來本身，就是一種療癒。你今晚感覺好一點了嗎？',book:'《自己站起來》'};
+
+function submitDelivery(){
+  const val=document.getElementById('delivery-input').value.trim();
+  if(!val)return;
+  let match=defaultReply;
+  for(const r of deliveryResponses){
+    if(r.keywords.some(k=>val.includes(k))){match=r;break;}
+  }
+  document.getElementById('reply-text').innerHTML=match.reply.replace(/
+/g,'<br>');
+  document.getElementById('reply-q').innerHTML=match.q;
+  document.getElementById('reply-book-title').textContent=match.book;
+  document.getElementById('delivery-input').value='';
+  show('s-reply');
 }
 
-/* PARTICLES */
-#particles{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-.pt{position:absolute;border-radius:50%;animation:pdrift var(--d,18s) var(--dl,0s) infinite linear}
-.pt.dust{width:2px;height:2px;background:rgba(220,210,150,0.3)}
-.pt.fly{width:3px;height:3px;background:rgba(255,240,80,0.85);box-shadow:0 0 6px 2px rgba(255,235,60,0.35);animation:pflutter var(--d,14s) var(--dl,0s) infinite ease-in-out}
-@keyframes pdrift{0%{transform:translate(var(--sx,0px),110vh);opacity:0}10%{opacity:0.5}90%{opacity:0.25}100%{transform:translate(var(--ex,0px),-10px);opacity:0}}
-@keyframes pflutter{0%,100%{transform:translate(0,0);opacity:0}15%{opacity:1}50%{transform:translate(var(--mx,40px),var(--my,-50px));opacity:0.7}85%{opacity:0.3}}
-
-/* SCREENS */
-.screen{
-  position:fixed;inset:0;z-index:10;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:28px 20px;
-  opacity:0;pointer-events:none;
-  transition:opacity 1.1s ease;
-  overflow-y:auto;
-}
-/* 這裡將 pointer-events: all 改為 auto，解決部分瀏覽器無法點擊的問題 */
-.screen.active{opacity:1;pointer-events:auto;}
-.screen-inner{
-  width:100%;max-width:560px;
-  display:flex;flex-direction:column;
-  align-items:center;
-  max-height:calc(100vh - 56px);
-  overflow-y:auto;
-  scrollbar-width:none;
-  padding:8px 4px;
-}
-.screen-inner::-webkit-scrollbar{display:none}
-
-.brand, .brand-tag, .daily-strip, .entrance-poem, .btn-enter {
-  will-change: opacity, transform;
-}
-
-/* ── ENTRANCE ── */
-.brand{
-  font-size:clamp(36px,8vw,56px);font-weight:200;
-  letter-spacing:0.26em;color:#f0ead8;
-  text-shadow:0 0 50px rgba(0,0,0,0.9);
-  animation:fadeUp 2s ease both;
-  text-align:center;
-}
-.brand-tag{
-  font-size:12px;letter-spacing:0.2em;color:var(--dim);
-  margin:10px 0 16px;
-  animation:fadeUp 2s 0.3s ease both;
-}
-.daily-strip{
-  font-size:12px;letter-spacing:0.12em;color:rgba(200,180,112,0.7);
-  margin-bottom:48px;
-  animation:fadeUp 2s 0.5s ease both;
-  text-align:center;
-  font-style:italic;
-}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.entrance-poem{
-  font-size:16px;font-weight:300;
-  color:rgba(220,216,200,0.8);
-  line-height:2.8;letter-spacing:0.1em;
-  text-align:center;margin-bottom:52px;
-  animation:fadeUp 2s 0.7s ease both;
-  text-shadow:0 2px 12px rgba(0,0,0,0.7);
-}
-.btn-enter{
-  font-size:13px;letter-spacing:0.22em;
-  color:rgba(200,180,112,0.88);
-  border:0.5px solid rgba(200,180,112,0.32);
-  padding:14px 44px;
-  background:rgba(15,18,16,0.45);
-  backdrop-filter:blur(8px);
-  cursor:pointer;
-  transition:all 0.5s ease;
-  animation:fadeUp 2s 1s ease both;
-  position: relative;
-  z-index: 20;
-}
-.btn-enter:hover{border-color:rgba(200,180,112,0.7);letter-spacing:0.3em;color:var(--gold)}
-
-/* ── MAP ── */
-.map-title{
-  font-size:clamp(14px,3vw,18px);letter-spacing:0.4em;
-  color:var(--text);margin-bottom:32px;
-  text-shadow:0 2px 10px rgba(0,0,0,0.8);
-  text-align:center;
-}
-.daily-note-bar{
-  width:100%;max-width:480px;
-  padding:14px 20px;
-  border:0.5px solid rgba(200,180,112,0.25);
-  background:rgba(15,18,16,0.55);
-  backdrop-filter:blur(6px);
-  margin-bottom:28px;
-  text-align:center;
-  cursor:pointer;
-  transition:border-color 0.4s;
-}
-.daily-note-bar:hover{border-color:rgba(200,180,112,0.5)}
-.daily-note-label{font-size:10px;letter-spacing:0.16em;color:rgba(200,180,112,0.55);margin-bottom:6px}
-.daily-note-text{font-size:13px;color:rgba(220,216,200,0.8);line-height:1.8;font-style:italic}
-.map-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:10px;width:100%;max-width:480px;margin-bottom:20px;
-}
-@media(min-width:480px){.map-grid{grid-template-columns:repeat(4,1fr)}}
+// ── INIT ──
+initDaily();
+</script>
+</body>
+</html>
 .map-node{
   padding:18px 10px;
   border:0.5px solid rgba(163,185,168,0.18);
