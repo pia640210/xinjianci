@@ -460,6 +460,42 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
   width: 1px; height: 12px;
   background: var(--b1);
 }
+
+/* ── TOUCH DEVICE OVERRIDES ──
+   hover:none = touchscreen (phone/tablet)
+   On touch, elements can't hover, so show them at readable brightness directly */
+@media (hover: none) {
+  /* firefly text buttons — always visible on touch */
+  .ff-text { color: var(--mist) !important; }
+
+  /* bordered buttons — always visible */
+  .ff-border { color: var(--smoke) !important; border-color: var(--b2) !important; }
+
+  /* path cells — name always readable */
+  .path-name { color: var(--smoke) !important; }
+  .path-glyph { opacity: 0.8 !important; }
+
+  /* note footer buttons — always visible */
+  .node-note-btn { color: var(--mist) !important; }
+
+  /* explore deeper button */
+  .explore-btn { color: var(--mist) !important; }
+
+  /* back/nav buttons */
+  .node-back, .paths-back, .mb-back, .saved-back { color: var(--mist) !important; }
+
+  /* paths footer button */
+  .paths-foot-btn { color: var(--light) !important; }
+
+  /* book links */
+  .book-link { color: var(--mist) !important; border-color: var(--b2) !important; }
+
+  /* back hint inside node */
+  .ff-text[onclick*="shallowerSlide"] { color: var(--fog) !important; }
+
+  /* path cell hover glow — simulate subtle glow on touch as static state */
+  .path-cell::after { opacity: 0.5 !important; }
+}
 </style>
 </head>
 <body>
