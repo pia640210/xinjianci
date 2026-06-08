@@ -468,105 +468,120 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 /* ── TOUCH DEVICE OVERRIDES ──
    hover:none = touchscreen — all interactive elements show at full brightness,
    key action buttons show in firefly green permanently */
-@media (hover: none) {
 
-  /* ── PATH GRID ── */
+
+/* ══════════════════════════════
+   TOUCH & MOBILE — appended last for highest priority
+   Covers both hover:none devices AND small screens
+══════════════════════════════ */
+
+/* Path grid nodes — always bright on touch */
+@media (hover: none), (max-width: 768px) {
+  .path-glyph {
+    opacity: 1 !important;
+    font-size: 26px !important;
+  }
   .path-name {
-    color: rgba(255,245,210,0.90) !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
+    color: #f0ebe0 !important;
   }
   .path-mood {
-    color: rgba(255,245,210,0.55) !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
+    color: rgba(240,235,224,0.55) !important;
   }
-  .path-glyph { opacity: 1 !important; font-size: 24px !important; }
-  .path-cell::after { opacity: 0.3 !important; }
+}
 
-  /* ── NAV / BACK BUTTONS ── */
-  .node-back,
-  .paths-back,
-  .mb-back,
-  .saved-back {
-    color: rgba(255,245,210,0.65) !important;
+/* Key action buttons — firefly green, always visible */
+@media (hover: none), (max-width: 768px) {
+  button.explore-btn,
+  .explore-btn {
+    color: #c8e88a !important;
+    text-shadow: 0 0 8px rgba(180,230,100,0.6), 0 0 20px rgba(160,220,80,0.3) !important;
+    font-size: 14px !important;
+    letter-spacing: 0.25em !important;
+  }
+  button.node-note-btn,
+  .node-note-btn {
+    color: #c8e88a !important;
+    text-shadow: 0 0 8px rgba(180,230,100,0.6), 0 0 20px rgba(160,220,80,0.3) !important;
     font-size: 13px !important;
-    letter-spacing: 0.18em !important;
+    letter-spacing: 0.22em !important;
   }
+}
 
-  /* ── NODE TOP BAR ── */
+/* Navigation back buttons */
+@media (hover: none), (max-width: 768px) {
+  button.node-back,
+  button.paths-back,
+  button.mb-back,
+  button.saved-back {
+    color: rgba(240,235,224,0.75) !important;
+    font-size: 13px !important;
+  }
   .node-top-name {
     font-size: 15px !important;
-    color: rgba(255,245,210,0.85) !important;
+    color: rgba(240,235,224,0.88) !important;
   }
   .node-top-theme {
     font-size: 12px !important;
-    color: rgba(255,245,210,0.50) !important;
+    color: rgba(240,235,224,0.50) !important;
   }
+}
 
-  /* ── KEY ACTION: 再走深一點 ── */
-  .explore-btn {
-    color: var(--glow-c) !important;
-    text-shadow: var(--glow) !important;
-    font-size: 14px !important;
-    letter-spacing: 0.22em !important;
-  }
-
-  /* ── KEY ACTION: 撿紙條 / 口袋 ── */
-  .node-note-btn {
-    color: var(--glow-c) !important;
-    text-shadow: var(--glow) !important;
-    font-size: 13px !important;
-    letter-spacing: 0.2em !important;
-  }
-
-  /* ── ENTRY CTA ── */
+/* Entry + paths footer */
+@media (hover: none), (max-width: 768px) {
   .ff-border {
-    color: rgba(255,245,210,0.90) !important;
-    border-color: rgba(255,245,210,0.40) !important;
-    font-size: 13px !important;
+    color: rgba(240,235,224,0.90) !important;
+    border-color: rgba(240,235,224,0.38) !important;
   }
-
-  /* ── PATHS FOOTER ── */
-  .paths-foot-btn {
-    color: rgba(255,245,210,0.85) !important;
+  button.paths-foot-btn {
+    color: rgba(240,235,224,0.88) !important;
     font-size: 14px !important;
-    letter-spacing: 0.28em !important;
+    letter-spacing: 0.3em !important;
+    display: block !important;
+    padding: 6px 0 !important;
   }
+}
 
-  /* ── BOOK LINKS ── */
+/* Book links + node content text */
+@media (hover: none), (max-width: 768px) {
   .book-link {
-    color: rgba(255,245,210,0.65) !important;
-    border-color: rgba(255,245,210,0.18) !important;
+    color: rgba(240,235,224,0.65) !important;
+    border-color: rgba(240,235,224,0.18) !important;
     font-size: 13px !important;
+    padding: 7px 16px !important;
   }
-
-  /* ── ANCHOR / OBS TEXT in node ── */
   .obs-as-anchor {
-    font-size: clamp(17px, 4.5vw, 23px) !important;
+    font-size: clamp(17px, 4.5vw, 22px) !important;
+    color: rgba(240,235,224,0.72) !important;
   }
   .anchor-as-obs {
-    font-size: clamp(18px, 4.8vw, 26px) !important;
+    font-size: clamp(18px, 5vw, 26px) !important;
+    color: rgba(240,235,224,0.94) !important;
   }
-  .obs-block { font-size: 15px !important; line-height: 2.1 !important; }
-  .q-text    { font-size: 16px !important; }
-
-  /* ── MAILBOX ── */
-  .mb-title  { font-size: 22px !important; }
-  .mb-sub    { font-size: 15px !important; }
-  .mb-textarea { font-size: 15px !important; }
-  .mb-send   { font-size: 13px !important; padding: 14px 36px !important; }
-  .mb-resp-text { font-size: 15px !important; }
-
-  /* ── BACK HINT inside node ── */
-  button[onclick*="shallowerSlide"] {
-    font-size: 12px !important;
-    color: rgba(255,245,210,0.45) !important;
+  .obs-block {
+    font-size: 15px !important;
+    color: rgba(240,235,224,0.55) !important;
   }
-
-  /* ── NOTE PAPER ── */
-  .note-text { font-size: 18px !important; line-height: 2.3 !important; }
-  .note-save-btn { font-size: 13px !important; }
-  .note-eyebrow  { font-size: 11px !important; letter-spacing: 0.35em !important; }
+  .q-text {
+    font-size: 16px !important;
+    color: rgba(240,235,224,0.82) !important;
+  }
 }
+
+/* Mailbox */
+@media (hover: none), (max-width: 768px) {
+  .mb-title { font-size: 22px !important; color: rgba(240,235,224,0.88) !important; }
+  .mb-sub   { font-size: 15px !important; color: rgba(240,235,224,0.58) !important; }
+  .mb-textarea { font-size: 16px !important; }
+  .mb-send {
+    font-size: 14px !important;
+    padding: 14px 38px !important;
+    letter-spacing: 0.3em !important;
+  }
+  .mb-resp-text { font-size: 16px !important; color: rgba(240,235,224,0.70) !important; }
+}
+
 </style>
 </head>
 <body>
@@ -1240,53 +1255,21 @@ async function sendMailbox(){
   const respText=document.getElementById('mbRespText');
   resp.classList.add('show');
   respText.classList.add('tcursor'); respText.textContent='';
-  // OpenRouter — 免費方案，支援手機與電腦直接呼叫，無需額外費用
-  // 使用免費模型：mistralai/mistral-7b-instruct (繁中效果佳)
-  // API key 是 OpenRouter 公開的免費測試 key，或換成你自己申請的免費 key
-  // 申請網址: https://openrouter.ai (免費，無需信用卡)
-  const OR_KEY = 'YOUR_OPENROUTER_KEY_HERE'; // 換成你的 OpenRouter key
+  // Pollinations AI — 完全免費，無需 API key，手機電腦都支援
+  // https://pollinations.ai — 開源免費服務，無用量限制
+  const systemPrompt = `你是「心間隙花園」的回聲。這是一個讓城市裡疲憊的人可以停下來的地方。當有人把心事投入花園，你的任務：讓他感覺被聽見，而不是被分析。不要給建議，不要給結論，不要說「你應該」。說出他可能沒有說完的那個感受。在最後，留下一個輕輕的問題——不是要他想通，只是讓他多待一會兒。語氣：像深夜寫的一封信。溫柔，但不甜膩。誠實，但不沉重。字數：100–150字。語言：繁體中文。禁用詞：靈魂、宇宙、光芒、綻放、昇華、歸途、療癒、修行。格式：純文字段落，不要條列，不要標題。`;
 
-  try{
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + OR_KEY,
-        'HTTP-Referer': 'https://pia640210.github.io/xinjianci/',
-        'X-Title': '心間隙'
-      },
-      body: JSON.stringify({
-        model: 'mistralai/mistral-7b-instruct:free',
-        max_tokens: 400,
-        messages: [
-          {
-            role: 'system',
-            content: `你是「心間隙花園」的回聲。這是一個讓城市裡疲憊的人可以停下來的地方。
-
-當有人把心事投入花園，你的任務：
-1. 讓他感覺被聽見，而不是被分析
-2. 不要給建議，不要給結論，不要說「你應該」
-3. 說出他可能沒有說完的那個感受
-4. 在最後，留下一個輕輕的問題——不是要他想通，只是讓他多待一會兒
-
-語氣：像深夜寫的一封信。溫柔，但不甜膩。誠實，但不沉重。
-字數：100–150字。語言：繁體中文。
-禁用詞：靈魂、宇宙、光芒、綻放、昇華、歸途、療癒、修行。
-格式：純文字段落，不要條列，不要標題。`
-          },
-          { role: 'user', content: input }
-        ]
-      })
-    });
-
+  try {
+    const prompt = encodeURIComponent(systemPrompt + '\n\n讀者的心事：' + input);
+    const url = `https://text.pollinations.ai/${prompt}?model=openai&seed=${Date.now()}&json=false`;
+    const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content || '';
-    if (!text) throw new Error('empty');
+    const text = await res.text();
+    if (!text || text.trim().length < 5) throw new Error('empty');
     respText.classList.remove('tcursor');
-    await typewrite(respText, text);
+    await typewrite(respText, text.trim());
   } catch(e) {
-    console.error('API error:', e.message);
+    console.error('API error:', e);
     respText.classList.remove('tcursor');
     respText.textContent = '花園暫時無法回應。但你說的話，已經落在這裡了。';
   }
