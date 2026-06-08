@@ -325,14 +325,18 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 }
 @media(max-width:580px){
   .paths-grid{grid-template-columns:repeat(2,1fr)}
+  .path-cell{padding:2rem 0.75rem}
   .path-cell:nth-child(4n){border-right:1px solid var(--b1)}
   .path-cell:nth-child(2n){border-right:none}
   .path-cell:nth-last-child(-n+4){border-bottom:1px solid var(--b1)}
   .path-cell:nth-last-child(-n+2){border-bottom:none}
-  .node-body{padding:3rem 1.5rem 6rem}
-  .node-topbar{padding:1rem 1.25rem}
+  .node-body{padding:2.5rem 1.25rem 6rem}
+  .node-topbar{padding:0.9rem 1.25rem;gap:0.75rem}
   .anchor-block{font-size:19px}
-  .mb-inner{padding:3rem 0 5rem}
+  .mb-inner{padding:2.5rem 0 5rem}
+  .node-note-footer{flex-direction:column;gap:1rem;align-items:flex-start}
+  .node-note-divider{width:24px;height:1px}
+  .explore-hint{margin:2.5rem 0}
 }
 
 /* ══════════════════════════════
@@ -466,40 +470,102 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
    key action buttons show in firefly green permanently */
 @media (hover: none) {
 
-  /* ── KEY ACTION BUTTONS: permanent firefly green ── */
-  .explore-btn,
+  /* ── PATH GRID ── */
+  .path-name {
+    color: rgba(255,245,210,0.90) !important;
+    font-size: 14px !important;
+  }
+  .path-mood {
+    color: rgba(255,245,210,0.55) !important;
+    font-size: 11px !important;
+  }
+  .path-glyph { opacity: 1 !important; font-size: 24px !important; }
+  .path-cell::after { opacity: 0.3 !important; }
+
+  /* ── NAV / BACK BUTTONS ── */
+  .node-back,
+  .paths-back,
+  .mb-back,
+  .saved-back {
+    color: rgba(255,245,210,0.65) !important;
+    font-size: 13px !important;
+    letter-spacing: 0.18em !important;
+  }
+
+  /* ── NODE TOP BAR ── */
+  .node-top-name {
+    font-size: 15px !important;
+    color: rgba(255,245,210,0.85) !important;
+  }
+  .node-top-theme {
+    font-size: 12px !important;
+    color: rgba(255,245,210,0.50) !important;
+  }
+
+  /* ── KEY ACTION: 再走深一點 ── */
+  .explore-btn {
+    color: var(--glow-c) !important;
+    text-shadow: var(--glow) !important;
+    font-size: 14px !important;
+    letter-spacing: 0.22em !important;
+  }
+
+  /* ── KEY ACTION: 撿紙條 / 口袋 ── */
   .node-note-btn {
     color: var(--glow-c) !important;
     text-shadow: var(--glow) !important;
+    font-size: 13px !important;
+    letter-spacing: 0.2em !important;
   }
-
-  /* ── NAVIGATION BUTTONS: clearly readable ── */
-  .ff-text { color: var(--light) !important; }
-  .node-back, .paths-back, .mb-back, .saved-back { color: var(--smoke) !important; }
 
   /* ── ENTRY CTA ── */
   .ff-border {
-    color: var(--light) !important;
-    border-color: rgba(255,245,210,0.35) !important;
+    color: rgba(255,245,210,0.90) !important;
+    border-color: rgba(255,245,210,0.40) !important;
+    font-size: 13px !important;
   }
 
-  /* ── PATH GRID ── */
-  .path-name { color: var(--light) !important; }
-  .path-mood { color: var(--mist) !important; }
-  .path-glyph { opacity: 0.9 !important; }
-  .path-cell::after { opacity: 0.4 !important; }
-
   /* ── PATHS FOOTER ── */
-  .paths-foot-btn { color: var(--light) !important; }
+  .paths-foot-btn {
+    color: rgba(255,245,210,0.85) !important;
+    font-size: 14px !important;
+    letter-spacing: 0.28em !important;
+  }
 
   /* ── BOOK LINKS ── */
   .book-link {
-    color: var(--smoke) !important;
-    border-color: var(--b2) !important;
+    color: rgba(255,245,210,0.65) !important;
+    border-color: rgba(255,245,210,0.18) !important;
+    font-size: 13px !important;
   }
 
-  /* ── NODE NOTE DIVIDER ── */
-  .node-note-divider { background: var(--b2) !important; }
+  /* ── ANCHOR / OBS TEXT in node ── */
+  .obs-as-anchor {
+    font-size: clamp(17px, 4.5vw, 23px) !important;
+  }
+  .anchor-as-obs {
+    font-size: clamp(18px, 4.8vw, 26px) !important;
+  }
+  .obs-block { font-size: 15px !important; line-height: 2.1 !important; }
+  .q-text    { font-size: 16px !important; }
+
+  /* ── MAILBOX ── */
+  .mb-title  { font-size: 22px !important; }
+  .mb-sub    { font-size: 15px !important; }
+  .mb-textarea { font-size: 15px !important; }
+  .mb-send   { font-size: 13px !important; padding: 14px 36px !important; }
+  .mb-resp-text { font-size: 15px !important; }
+
+  /* ── BACK HINT inside node ── */
+  button[onclick*="shallowerSlide"] {
+    font-size: 12px !important;
+    color: rgba(255,245,210,0.45) !important;
+  }
+
+  /* ── NOTE PAPER ── */
+  .note-text { font-size: 18px !important; line-height: 2.3 !important; }
+  .note-save-btn { font-size: 13px !important; }
+  .note-eyebrow  { font-size: 11px !important; letter-spacing: 0.35em !important; }
 }
 </style>
 </head>
@@ -667,43 +733,148 @@ function makeSoundscape() {
   makeWaterLayer(250,  0.4, 8);   // mid flow
   makeWaterLayer(90,   0.3, 10);  // deep rumble
 
-  // ── NIGHT INSECTS — slow, tonal, not clicking ──
-  // Use slow sine-wave amplitude modulation so they "breathe" not "click"
-  const insectFreqs = [3100, 3450, 3800, 4200];
+  // ── NIGHT INSECTS — very soft, low-frequency, distant ──
+  // Frequencies kept low (not shrill), amplitude tiny, long slow envelopes
+  const insectFreqs = [1100, 1350, 1600, 1850];
   insectFreqs.forEach((freq, i) => {
     const osc = audioCtx.createOscillator();
-    osc.type = 'sine'; osc.frequency.value = freq;
-    // Slight detune for naturalness
-    osc.detune.value = (Math.random() - 0.5) * 8;
+    osc.type = 'sine';
+    osc.frequency.value = freq + (Math.random() - 0.5) * 40;
 
-    // LFO to modulate amplitude — creates the "singing" rather than clicking
+    // Very slow LFO — 1–2 Hz, like a distant, unhurried insect
     const lfo = audioCtx.createOscillator();
     lfo.type = 'sine';
-    lfo.frequency.value = 4 + Math.random() * 3; // 4–7 Hz wing flutter
-    const lfoGain = audioCtx.createGain();
-    lfoGain.gain.value = 0.006;
-    lfo.connect(lfoGain);
+    lfo.frequency.value = 0.8 + Math.random() * 1.2;
+    const lfoDepth = audioCtx.createGain();
+    lfoDepth.gain.value = 0.002; // extremely subtle modulation
+    lfo.connect(lfoDepth);
+
+    // Soft lowpass so the tone is muffled, not piercing
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = freq * 1.3; lp.Q.value = 0.5;
 
     const envGain = audioCtx.createGain();
     envGain.gain.value = 0;
-    lfoGain.connect(envGain.gain); // LFO modulates the gain
-    osc.connect(envGain); envGain.connect(master);
+    lfoDepth.connect(envGain.gain);
+    osc.connect(lp); lp.connect(envGain); envGain.connect(master);
     osc.start(); lfo.start();
 
-    // Slow envelope: insects "turn on" and "off" over 8–20s periods
-    function insectSong() {
+    // Long, slow breathing envelope — 15–35s on, 8–20s off
+    function insectBreath() {
       const t = audioCtx.currentTime;
-      const onDur  = 6 + Math.random() * 14;
-      const offDur = 4 + Math.random() * 10;
-      const peak   = 0.007 + Math.random() * 0.005;
+      const onDur  = 15 + Math.random() * 20;
+      const offDur = 8  + Math.random() * 15;
+      const peak   = 0.003 + Math.random() * 0.002; // very quiet
       envGain.gain.setValueAtTime(0, t);
-      envGain.gain.linearRampToValueAtTime(peak, t + 2.5);       // fade in
-      envGain.gain.linearRampToValueAtTime(peak * 0.8, t + onDur * 0.7);
-      envGain.gain.linearRampToValueAtTime(0, t + onDur);         // fade out
-      setTimeout(insectSong, (onDur + offDur) * 1000);
+      envGain.gain.linearRampToValueAtTime(peak, t + 5);
+      envGain.gain.linearRampToValueAtTime(peak * 0.7, t + onDur * 0.8);
+      envGain.gain.linearRampToValueAtTime(0, t + onDur);
+      setTimeout(insectBreath, (onDur + offDur) * 1000);
     }
-    setTimeout(insectSong, 2000 + i * 1800);
+    setTimeout(insectBreath, 4000 + i * 3000);
   });
+
+  // ── FROGS — low warbling calls, very occasional ──
+  // Two frog "voices" at different pitches, slow vibrato
+  const frogFreqs = [280, 340];
+  frogFreqs.forEach((baseFreq, i) => {
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = baseFreq;
+
+    // Vibrato: slow pitch wobble
+    const vibLfo = audioCtx.createOscillator();
+    vibLfo.type = 'sine'; vibLfo.frequency.value = 6 + i * 1.5;
+    const vibDepth = audioCtx.createGain(); vibDepth.gain.value = 4;
+    vibLfo.connect(vibDepth); vibDepth.connect(osc.frequency);
+
+    // Second harmonic layer for richness
+    const osc2 = audioCtx.createOscillator();
+    osc2.type = 'sine'; osc2.frequency.value = baseFreq * 2.1;
+    const osc2g = audioCtx.createGain(); osc2g.gain.value = 0.25;
+    osc2.connect(osc2g);
+
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 900; lp.Q.value = 0.7;
+
+    const frogEnv = audioCtx.createGain(); frogEnv.gain.value = 0;
+    osc.connect(lp); osc2g.connect(lp);
+    lp.connect(frogEnv); frogEnv.connect(master);
+    osc.start(); osc2.start(); vibLfo.start();
+
+    function frogCall() {
+      const t = audioCtx.currentTime;
+      const callDur = 0.18 + Math.random() * 0.12; // short croak
+      const peak = 0.06 + Math.random() * 0.04;
+      frogEnv.gain.cancelScheduledValues(t);
+      frogEnv.gain.setValueAtTime(0, t);
+      frogEnv.gain.linearRampToValueAtTime(peak, t + 0.04);
+      frogEnv.gain.linearRampToValueAtTime(peak * 0.6, t + callDur * 0.6);
+      frogEnv.gain.linearRampToValueAtTime(0, t + callDur);
+
+      // Frogs call in bursts: 2–5 croaks, then long silence
+      const burstCount = Math.floor(2 + Math.random() * 4);
+      const burstInterval = 0.35 + Math.random() * 0.25;
+      for (let k = 1; k < burstCount; k++) {
+        const kt = t + k * burstInterval;
+        const kp = peak * (0.7 + Math.random() * 0.4);
+        frogEnv.gain.linearRampToValueAtTime(0, kt - 0.02);
+        frogEnv.gain.linearRampToValueAtTime(kp, kt + 0.04);
+        frogEnv.gain.linearRampToValueAtTime(0, kt + callDur);
+      }
+      // Long silence before next burst: 18–45s
+      const silence = 18000 + Math.random() * 27000;
+      setTimeout(frogCall, silence);
+    }
+    // Stagger the two frogs, first call after 8–20s
+    setTimeout(frogCall, 8000 + i * 7000 + Math.random() * 6000);
+  });
+
+  // ── BIRDS — single distant calls, very rare ──
+  // Modelled as a short frequency-sweep (like a warble or whistle)
+  function birdCall() {
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+
+    // Pick a bird "type" randomly
+    const types = [
+      { start: 1800, end: 2400, dur: 0.22 }, // short rising whistle
+      { start: 2200, end: 1600, dur: 0.28 }, // falling note
+      { start: 1600, end: 2000, dur: 0.15 }, // quick chip
+      { start: 2000, end: 2200, dur: 0.35 }, // slow warble start
+    ];
+    const type = types[Math.floor(Math.random() * types.length)];
+    const noteCount = Math.floor(1 + Math.random() * 3);
+
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 3000;
+
+    const birdEnv = audioCtx.createGain(); birdEnv.gain.value = 0;
+    osc.connect(lp); lp.connect(birdEnv); birdEnv.connect(master);
+    osc.start(t);
+
+    for (let n = 0; n < noteCount; n++) {
+      const nt = t + n * (type.dur + 0.08 + Math.random() * 0.12);
+      const pitch_var = (Math.random() - 0.5) * 200;
+      osc.frequency.setValueAtTime(type.start + pitch_var, nt);
+      osc.frequency.linearRampToValueAtTime(type.end + pitch_var, nt + type.dur);
+      const peak = 0.055 + Math.random() * 0.035;
+      birdEnv.gain.setValueAtTime(0, nt);
+      birdEnv.gain.linearRampToValueAtTime(peak, nt + 0.03);
+      birdEnv.gain.linearRampToValueAtTime(peak * 0.7, nt + type.dur * 0.7);
+      birdEnv.gain.linearRampToValueAtTime(0, nt + type.dur);
+    }
+
+    const totalDur = noteCount * (type.dur + 0.1) + 0.3;
+    osc.stop(t + totalDur + 0.1);
+
+    // Next bird call: 35–90 seconds later — rare and surprising
+    const nextCall = 35000 + Math.random() * 55000;
+    setTimeout(birdCall, nextCall);
+  }
+  // First bird call after 20–40s
+  setTimeout(birdCall, 20000 + Math.random() * 20000);
 
   soundOn = true;
 }
@@ -1069,14 +1240,28 @@ async function sendMailbox(){
   const respText=document.getElementById('mbRespText');
   resp.classList.add('show');
   respText.classList.add('tcursor'); respText.textContent='';
+  // OpenRouter — 免費方案，支援手機與電腦直接呼叫，無需額外費用
+  // 使用免費模型：mistralai/mistral-7b-instruct (繁中效果佳)
+  // API key 是 OpenRouter 公開的免費測試 key，或換成你自己申請的免費 key
+  // 申請網址: https://openrouter.ai (免費，無需信用卡)
+  const OR_KEY = 'YOUR_OPENROUTER_KEY_HERE'; // 換成你的 OpenRouter key
+
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`你是「心間隙花園」的回聲。這是一個讓城市裡疲憊的人可以停下來的地方。
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + OR_KEY,
+        'HTTP-Referer': 'https://pia640210.github.io/xinjianci/',
+        'X-Title': '心間隙'
+      },
+      body: JSON.stringify({
+        model: 'mistralai/mistral-7b-instruct:free',
+        max_tokens: 400,
+        messages: [
+          {
+            role: 'system',
+            content: `你是「心間隙花園」的回聲。這是一個讓城市裡疲憊的人可以停下來的地方。
 
 當有人把心事投入花園，你的任務：
 1. 讓他感覺被聽見，而不是被分析
@@ -1087,17 +1272,23 @@ async function sendMailbox(){
 語氣：像深夜寫的一封信。溫柔，但不甜膩。誠實，但不沉重。
 字數：100–150字。語言：繁體中文。
 禁用詞：靈魂、宇宙、光芒、綻放、昇華、歸途、療癒、修行。
-格式：純文字段落，不要條列，不要標題。`,
-        messages:[{role:'user',content:input}]
+格式：純文字段落，不要條列，不要標題。`
+          },
+          { role: 'user', content: input }
+        ]
       })
     });
-    const data=await res.json();
-    const text=data.content?.[0]?.text||'花園安靜地接住了你說的話。';
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content || '';
+    if (!text) throw new Error('empty');
     respText.classList.remove('tcursor');
-    await typewrite(respText,text);
-  }catch(e){
+    await typewrite(respText, text);
+  } catch(e) {
+    console.error('API error:', e.message);
     respText.classList.remove('tcursor');
-    respText.textContent='花園暫時無法回應。但你說的話，已經落在這裡了。';
+    respText.textContent = '花園暫時無法回應。但你說的話，已經落在這裡了。';
   }
   btn.disabled=false; btn.textContent='再 投 一 張';
   // reveal book hint
