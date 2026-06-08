@@ -462,39 +462,44 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 }
 
 /* ── TOUCH DEVICE OVERRIDES ──
-   hover:none = touchscreen (phone/tablet)
-   On touch, elements can't hover, so show them at readable brightness directly */
+   hover:none = touchscreen — all interactive elements show at full brightness,
+   key action buttons show in firefly green permanently */
 @media (hover: none) {
-  /* firefly text buttons — always visible on touch */
-  .ff-text { color: var(--mist) !important; }
 
-  /* bordered buttons — always visible */
-  .ff-border { color: var(--smoke) !important; border-color: var(--b2) !important; }
+  /* ── KEY ACTION BUTTONS: permanent firefly green ── */
+  .explore-btn,
+  .node-note-btn {
+    color: var(--glow-c) !important;
+    text-shadow: var(--glow) !important;
+  }
 
-  /* path cells — name always readable */
-  .path-name { color: var(--smoke) !important; }
-  .path-glyph { opacity: 0.8 !important; }
+  /* ── NAVIGATION BUTTONS: clearly readable ── */
+  .ff-text { color: var(--light) !important; }
+  .node-back, .paths-back, .mb-back, .saved-back { color: var(--smoke) !important; }
 
-  /* note footer buttons — always visible */
-  .node-note-btn { color: var(--mist) !important; }
+  /* ── ENTRY CTA ── */
+  .ff-border {
+    color: var(--light) !important;
+    border-color: rgba(255,245,210,0.35) !important;
+  }
 
-  /* explore deeper button */
-  .explore-btn { color: var(--mist) !important; }
+  /* ── PATH GRID ── */
+  .path-name { color: var(--light) !important; }
+  .path-mood { color: var(--mist) !important; }
+  .path-glyph { opacity: 0.9 !important; }
+  .path-cell::after { opacity: 0.4 !important; }
 
-  /* back/nav buttons */
-  .node-back, .paths-back, .mb-back, .saved-back { color: var(--mist) !important; }
-
-  /* paths footer button */
+  /* ── PATHS FOOTER ── */
   .paths-foot-btn { color: var(--light) !important; }
 
-  /* book links */
-  .book-link { color: var(--mist) !important; border-color: var(--b2) !important; }
+  /* ── BOOK LINKS ── */
+  .book-link {
+    color: var(--smoke) !important;
+    border-color: var(--b2) !important;
+  }
 
-  /* back hint inside node */
-  .ff-text[onclick*="shallowerSlide"] { color: var(--fog) !important; }
-
-  /* path cell hover glow — simulate subtle glow on touch as static state */
-  .path-cell::after { opacity: 0.5 !important; }
+  /* ── NODE NOTE DIVIDER ── */
+  .node-note-divider { background: var(--b2) !important; }
 }
 </style>
 </head>
