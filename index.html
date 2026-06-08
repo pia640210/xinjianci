@@ -572,11 +572,21 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 <!-- ══ S4: MAILBOX ══ -->
 <div class="screen" id="s-mailbox">
   <div class="mb-inner">
-    <button class="ff ff-text mb-back" onclick="goBack()">← 回到地圖</button>
     <button class="ff ff-text mb-back" onclick="goBack()">← 回 到 地 圖</button>
     <h2 class="mb-title">心事投遞箱</h2>
     <p class="mb-sub">有什麼放不下的嗎？<br>寫下來就好。</p>
-    <textarea class="mb-textarea" id="mbInput" placeholder="今天，有什麼事讓你停在這裡？"></textarea><br>
+    <div style="position:relative">
+      <textarea class="mb-textarea" id="mbInput" placeholder="今天，有什麼事讓你停在這裡？"></textarea>
+      <button class="ff" id="mbMic" onclick="toggleVoice()" title="語音輸入"
+        style="position:absolute;bottom:0.75rem;right:0.75rem;
+               font-size:16px;color:var(--fog);padding:4px;
+               transition:color 0.3s,text-shadow 0.3s;line-height:1">
+        🎙
+      </button>
+    </div>
+    <div id="mbVoiceStatus" style="font-size:11px;letter-spacing:0.15em;color:var(--fog);
+         margin-top:0.5rem;min-height:1.2em;display:none"></div>
+    <br>
     <button class="ff mb-send" id="mbBtn" onclick="sendMailbox()">投 入 花 園</button>
     <div class="mb-resp" id="mbResp">
       <span class="mb-resp-label">花 園 的 回 應</span>
@@ -606,65 +616,94 @@ function initAudio() {
 
 function makeSoundscape() {
   if (!audioCtx) return;
+  const sr = audioCtx.sampleRate;
 
-  // Master gain
+  // Master gain — fade in slowly
   const master = audioCtx.createGain();
   master.gain.setValueAtTime(0, audioCtx.currentTime);
-  master.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 4);
+  master.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 5);
   master.connect(audioCtx.destination);
 
-  // Wind: filtered noise
-  const bufSize = audioCtx.sampleRate * 4;
-  const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-  const noise = audioCtx.createBufferSource();
-  noise.buffer = buf; noise.loop = true;
-  const lp = audioCtx.createBiquadFilter();
-  lp.type = 'lowpass'; lp.frequency.value = 380;
-  lp.Q.value = 0.4;
-  const windGain = audioCtx.createGain();
-  windGain.gain.value = 0.55;
-  noise.connect(lp); lp.connect(windGain); windGain.connect(master);
-  noise.start();
-
-  // Slow wind swell
-  function windSwell() {
-    const t = audioCtx.currentTime;
-    const dur = 6 + Math.random() * 10;
-    windGain.gain.setValueAtTime(windGain.gain.value, t);
-    windGain.gain.linearRampToValueAtTime(0.3 + Math.random() * 0.5, t + dur * 0.5);
-    windGain.gain.linearRampToValueAtTime(0.2 + Math.random() * 0.2, t + dur);
-    setTimeout(windSwell, dur * 1000);
+  // ── FLOWING WATER ──
+  // Two layers of pink-ish noise filtered differently for depth
+  function makeWaterLayer(lpFreq, gainVal, bufSecs) {
+    const size = sr * bufSecs;
+    const buf = audioCtx.createBuffer(1, size, sr);
+    const d = buf.getChannelData(0);
+    // Pink noise approximation
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0;
+    for (let i = 0; i < size; i++) {
+      const w = Math.random() * 2 - 1;
+      b0 = 0.99886*b0 + w*0.0555179;
+      b1 = 0.99332*b1 + w*0.0750759;
+      b2 = 0.96900*b2 + w*0.1538520;
+      b3 = 0.86650*b3 + w*0.3104856;
+      b4 = 0.55000*b4 + w*0.5329522;
+      b5 = -0.7616*b5 - w*0.0168980;
+      d[i] = (b0+b1+b2+b3+b4+b5+w*0.5362) * 0.11;
+    }
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+    // randomise loop start so layers don't phase-cancel
+    src.loopStart = Math.random() * bufSecs * 0.5;
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'bandpass'; lp.frequency.value = lpFreq; lp.Q.value = 0.6;
+    const g = audioCtx.createGain(); g.gain.value = gainVal;
+    src.connect(lp); lp.connect(g); g.connect(master);
+    src.start();
+    // Gentle ripple modulation
+    function ripple() {
+      const t = audioCtx.currentTime;
+      const dur = 3 + Math.random() * 5;
+      g.gain.setValueAtTime(g.gain.value, t);
+      g.gain.linearRampToValueAtTime(gainVal * (0.75 + Math.random() * 0.5), t + dur * 0.6);
+      g.gain.linearRampToValueAtTime(gainVal * (0.8 + Math.random() * 0.3), t + dur);
+      setTimeout(ripple, dur * 1000);
+    }
+    ripple();
+    return g;
   }
-  windSwell();
+  makeWaterLayer(600,  0.5, 6);   // high gurgle
+  makeWaterLayer(250,  0.4, 8);   // mid flow
+  makeWaterLayer(90,   0.3, 10);  // deep rumble
 
-  // Crickets / night ambience: sine tones
-  [2800, 3200, 3600, 4100].forEach((freq, i) => {
+  // ── NIGHT INSECTS — slow, tonal, not clicking ──
+  // Use slow sine-wave amplitude modulation so they "breathe" not "click"
+  const insectFreqs = [3100, 3450, 3800, 4200];
+  insectFreqs.forEach((freq, i) => {
     const osc = audioCtx.createOscillator();
     osc.type = 'sine'; osc.frequency.value = freq;
-    const g = audioCtx.createGain();
-    g.gain.value = 0;
-    osc.connect(g); g.connect(master); osc.start();
-    function chirpLoop() {
-      const t = audioCtx.currentTime;
-      const interval = 1.8 + Math.random() * 3 + i * 0.7;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.012 + Math.random() * 0.008, t + 0.02);
-      g.gain.linearRampToValueAtTime(0, t + 0.07 + Math.random() * 0.04);
-      setTimeout(chirpLoop, interval * 1000);
-    }
-    setTimeout(chirpLoop, 500 + i * 300);
-  });
+    // Slight detune for naturalness
+    osc.detune.value = (Math.random() - 0.5) * 8;
 
-  // Distant water / deep hum
-  const hum = audioCtx.createOscillator();
-  hum.type = 'sine'; hum.frequency.value = 48;
-  const humGain = audioCtx.createGain(); humGain.gain.value = 0.06;
-  const humHp = audioCtx.createBiquadFilter();
-  humHp.type = 'highpass'; humHp.frequency.value = 30;
-  hum.connect(humHp); humHp.connect(humGain); humGain.connect(master);
-  hum.start();
+    // LFO to modulate amplitude — creates the "singing" rather than clicking
+    const lfo = audioCtx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 4 + Math.random() * 3; // 4–7 Hz wing flutter
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.value = 0.006;
+    lfo.connect(lfoGain);
+
+    const envGain = audioCtx.createGain();
+    envGain.gain.value = 0;
+    lfoGain.connect(envGain.gain); // LFO modulates the gain
+    osc.connect(envGain); envGain.connect(master);
+    osc.start(); lfo.start();
+
+    // Slow envelope: insects "turn on" and "off" over 8–20s periods
+    function insectSong() {
+      const t = audioCtx.currentTime;
+      const onDur  = 6 + Math.random() * 14;
+      const offDur = 4 + Math.random() * 10;
+      const peak   = 0.007 + Math.random() * 0.005;
+      envGain.gain.setValueAtTime(0, t);
+      envGain.gain.linearRampToValueAtTime(peak, t + 2.5);       // fade in
+      envGain.gain.linearRampToValueAtTime(peak * 0.8, t + onDur * 0.7);
+      envGain.gain.linearRampToValueAtTime(0, t + onDur);         // fade out
+      setTimeout(insectSong, (onDur + offDur) * 1000);
+    }
+    setTimeout(insectSong, 2000 + i * 1800);
+  });
 
   soundOn = true;
 }
@@ -873,9 +912,14 @@ const NODES = [
    NAV
 ═══════════════════════════ */
 let navStack = [];
+
+// Push a dummy history entry so browser back button fires popstate
 function goTo(id, push=true) {
   const cur = document.querySelector('.screen.active');
-  if (push && cur && cur.id !== id) navStack.push(cur.id);
+  if (push && cur && cur.id !== id) {
+    navStack.push(cur.id);
+    history.pushState({ screen: id }, '');
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const next = document.getElementById(id);
   next.classList.add('active');
@@ -884,13 +928,25 @@ function goTo(id, push=true) {
     const el = next.querySelector('.mb-inner');
     el.style.animation='none'; el.offsetHeight; el.style.animation='';
   }
-  // start audio on first interaction
   if (!soundOn) { try { initAudio(); } catch(e){} }
 }
 function goBack(){
   const prev = navStack.pop() || 's-entry';
   goTo(prev, false);
 }
+// Intercept browser back button
+window.addEventListener('popstate', function(e) {
+  if (navStack.length > 0) {
+    const prev = navStack.pop();
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const next = document.getElementById(prev);
+    next.classList.add('active');
+    next.scrollTop = 0;
+  } else {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('s-entry').classList.add('active');
+  }
+});
 
 /* ═══════════════════════════
    PATHS
@@ -1016,7 +1072,7 @@ async function sendMailbox(){
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -1132,6 +1188,68 @@ function deleteNote(i){
   saved.splice(i,1);
   localStorage.setItem('xinjianci_notes', JSON.stringify(saved));
   openSaved();
+}
+
+
+/* ═══════════════════════════
+   VOICE INPUT
+═══════════════════════════ */
+let recognition = null;
+let isListening = false;
+
+function toggleVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    const status = document.getElementById('mbVoiceStatus');
+    status.style.display = 'block';
+    status.textContent = '你的瀏覽器不支援語音輸入';
+    setTimeout(() => { status.style.display = 'none'; }, 2500);
+    return;
+  }
+  if (isListening) {
+    recognition.stop();
+    return;
+  }
+  recognition = new SpeechRecognition();
+  recognition.lang = 'zh-TW';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  const mic = document.getElementById('mbMic');
+  const status = document.getElementById('mbVoiceStatus');
+  const input = document.getElementById('mbInput');
+
+  recognition.onstart = () => {
+    isListening = true;
+    mic.style.color = 'var(--glow-c)';
+    mic.style.textShadow = 'var(--glow)';
+    status.style.display = 'block';
+    status.textContent = '正 在 聆 聽…';
+  };
+  recognition.onresult = (e) => {
+    let interim = '';
+    let final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    if (final) {
+      input.value = (input.value + ' ' + final).trim();
+      status.textContent = '已 收 到';
+    } else {
+      status.textContent = interim || '正 在 聆 聽…';
+    }
+  };
+  recognition.onerror = (e) => {
+    status.textContent = e.error === 'not-allowed' ? '請 允 許 麥 克 風 權 限' : '語 音 輸 入 失 敗';
+    setTimeout(() => { status.style.display = 'none'; }, 2500);
+  };
+  recognition.onend = () => {
+    isListening = false;
+    mic.style.color = 'var(--fog)';
+    mic.style.textShadow = 'none';
+    setTimeout(() => { status.style.display = 'none'; }, 1500);
+  };
+  recognition.start();
 }
 
 buildPaths();
