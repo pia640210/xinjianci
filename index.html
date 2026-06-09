@@ -80,6 +80,9 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 #s-entry{
   background:var(--bg) url('background.jpg') center 42% / cover no-repeat;
 }
+#s-entry.night-mode{
+  background:var(--bg) url('background-night.png') center 50% / cover no-repeat;
+}
 #s-entry::after{
   content:'';position:absolute;inset:0;
   pointer-events:none;
@@ -718,211 +721,277 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 ═══════════════════════════ */
 let audioCtx = null;
 let soundOn = false;
+let currentSoundNodes = []; // 當前播放的音效節點，用來停止
 
-function initAudio() {
-  if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  makeSoundscape();
+function stopCurrentSound() {
+  currentSoundNodes.forEach(n => { try { n.stop(); } catch(e){} });
+  currentSoundNodes = [];
 }
 
-function makeSoundscape() {
-  if (!audioCtx) return;
-  const sr = audioCtx.sampleRate;
-
-  // Master gain — fade in slowly
-  const master = audioCtx.createGain();
-  master.gain.setValueAtTime(0, audioCtx.currentTime);
-  master.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 5);
-  master.connect(audioCtx.destination);
-
-  // ── FLOWING WATER ──
-  // Two layers of pink-ish noise filtered differently for depth
-  function makeWaterLayer(lpFreq, gainVal, bufSecs) {
-    const size = sr * bufSecs;
-    const buf = audioCtx.createBuffer(1, size, sr);
-    const d = buf.getChannelData(0);
-    // Pink noise approximation
-    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0;
-    for (let i = 0; i < size; i++) {
-      const w = Math.random() * 2 - 1;
-      b0 = 0.99886*b0 + w*0.0555179;
-      b1 = 0.99332*b1 + w*0.0750759;
-      b2 = 0.96900*b2 + w*0.1538520;
-      b3 = 0.86650*b3 + w*0.3104856;
-      b4 = 0.55000*b4 + w*0.5329522;
-      b5 = -0.7616*b5 - w*0.0168980;
-      d[i] = (b0+b1+b2+b3+b4+b5+w*0.5362) * 0.11;
-    }
-    const src = audioCtx.createBufferSource();
-    src.buffer = buf; src.loop = true;
-    // randomise loop start so layers don't phase-cancel
-    src.loopStart = Math.random() * bufSecs * 0.5;
-    const lp = audioCtx.createBiquadFilter();
-    lp.type = 'bandpass'; lp.frequency.value = lpFreq; lp.Q.value = 0.6;
-    const g = audioCtx.createGain(); g.gain.value = gainVal;
-    src.connect(lp); lp.connect(g); g.connect(master);
-    src.start();
-    // Gentle ripple modulation
-    function ripple() {
-      const t = audioCtx.currentTime;
-      const dur = 3 + Math.random() * 5;
-      g.gain.setValueAtTime(g.gain.value, t);
-      g.gain.linearRampToValueAtTime(gainVal * (0.75 + Math.random() * 0.5), t + dur * 0.6);
-      g.gain.linearRampToValueAtTime(gainVal * (0.8 + Math.random() * 0.3), t + dur);
-      setTimeout(ripple, dur * 1000);
-    }
-    ripple();
-    return g;
+function initAudio(nodeIndex) {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  } else {
+    stopCurrentSound();
   }
-  makeWaterLayer(600,  0.5, 6);   // high gurgle
-  makeWaterLayer(250,  0.4, 8);   // mid flow
-  makeWaterLayer(90,   0.3, 10);  // deep rumble
-
-  // ── NIGHT INSECTS — very soft, low-frequency, distant ──
-  // Frequencies kept low (not shrill), amplitude tiny, long slow envelopes
-  const insectFreqs = [1100, 1350, 1600, 1850];
-  insectFreqs.forEach((freq, i) => {
-    const osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = freq + (Math.random() - 0.5) * 40;
-
-    // Very slow LFO — 1–2 Hz, like a distant, unhurried insect
-    const lfo = audioCtx.createOscillator();
-    lfo.type = 'sine';
-    lfo.frequency.value = 0.8 + Math.random() * 1.2;
-    const lfoDepth = audioCtx.createGain();
-    lfoDepth.gain.value = 0.002; // extremely subtle modulation
-    lfo.connect(lfoDepth);
-
-    // Soft lowpass so the tone is muffled, not piercing
-    const lp = audioCtx.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = freq * 1.3; lp.Q.value = 0.5;
-
-    const envGain = audioCtx.createGain();
-    envGain.gain.value = 0;
-    lfoDepth.connect(envGain.gain);
-    osc.connect(lp); lp.connect(envGain); envGain.connect(master);
-    osc.start(); lfo.start();
-
-    // Long, slow breathing envelope — 15–35s on, 8–20s off
-    function insectBreath() {
-      const t = audioCtx.currentTime;
-      const onDur  = 15 + Math.random() * 20;
-      const offDur = 8  + Math.random() * 15;
-      const peak   = 0.003 + Math.random() * 0.002; // very quiet
-      envGain.gain.setValueAtTime(0, t);
-      envGain.gain.linearRampToValueAtTime(peak, t + 5);
-      envGain.gain.linearRampToValueAtTime(peak * 0.7, t + onDur * 0.8);
-      envGain.gain.linearRampToValueAtTime(0, t + onDur);
-      setTimeout(insectBreath, (onDur + offDur) * 1000);
-    }
-    setTimeout(insectBreath, 4000 + i * 3000);
-  });
-
-  // ── FROGS — low warbling calls, very occasional ──
-  // Two frog "voices" at different pitches, slow vibrato
-  const frogFreqs = [280, 340];
-  frogFreqs.forEach((baseFreq, i) => {
-    const osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = baseFreq;
-
-    // Vibrato: slow pitch wobble
-    const vibLfo = audioCtx.createOscillator();
-    vibLfo.type = 'sine'; vibLfo.frequency.value = 6 + i * 1.5;
-    const vibDepth = audioCtx.createGain(); vibDepth.gain.value = 4;
-    vibLfo.connect(vibDepth); vibDepth.connect(osc.frequency);
-
-    // Second harmonic layer for richness
-    const osc2 = audioCtx.createOscillator();
-    osc2.type = 'sine'; osc2.frequency.value = baseFreq * 2.1;
-    const osc2g = audioCtx.createGain(); osc2g.gain.value = 0.25;
-    osc2.connect(osc2g);
-
-    const lp = audioCtx.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = 900; lp.Q.value = 0.7;
-
-    const frogEnv = audioCtx.createGain(); frogEnv.gain.value = 0;
-    osc.connect(lp); osc2g.connect(lp);
-    lp.connect(frogEnv); frogEnv.connect(master);
-    osc.start(); osc2.start(); vibLfo.start();
-
-    function frogCall() {
-      const t = audioCtx.currentTime;
-      const callDur = 0.18 + Math.random() * 0.12; // short croak
-      const peak = 0.06 + Math.random() * 0.04;
-      frogEnv.gain.cancelScheduledValues(t);
-      frogEnv.gain.setValueAtTime(0, t);
-      frogEnv.gain.linearRampToValueAtTime(peak, t + 0.04);
-      frogEnv.gain.linearRampToValueAtTime(peak * 0.6, t + callDur * 0.6);
-      frogEnv.gain.linearRampToValueAtTime(0, t + callDur);
-
-      // Frogs call in bursts: 2–5 croaks, then long silence
-      const burstCount = Math.floor(2 + Math.random() * 4);
-      const burstInterval = 0.35 + Math.random() * 0.25;
-      for (let k = 1; k < burstCount; k++) {
-        const kt = t + k * burstInterval;
-        const kp = peak * (0.7 + Math.random() * 0.4);
-        frogEnv.gain.linearRampToValueAtTime(0, kt - 0.02);
-        frogEnv.gain.linearRampToValueAtTime(kp, kt + 0.04);
-        frogEnv.gain.linearRampToValueAtTime(0, kt + callDur);
-      }
-      // Long silence before next burst: 18–45s
-      const silence = 18000 + Math.random() * 27000;
-      setTimeout(frogCall, silence);
-    }
-    // Stagger the two frogs, first call after 8–20s
-    setTimeout(frogCall, 8000 + i * 7000 + Math.random() * 6000);
-  });
-
-  // ── BIRDS — single distant calls, very rare ──
-  // Modelled as a short frequency-sweep (like a warble or whistle)
-  function birdCall() {
-    const t = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-
-    // Pick a bird "type" randomly
-    const types = [
-      { start: 1800, end: 2400, dur: 0.22 }, // short rising whistle
-      { start: 2200, end: 1600, dur: 0.28 }, // falling note
-      { start: 1600, end: 2000, dur: 0.15 }, // quick chip
-      { start: 2000, end: 2200, dur: 0.35 }, // slow warble start
-    ];
-    const type = types[Math.floor(Math.random() * types.length)];
-    const noteCount = Math.floor(1 + Math.random() * 3);
-
-    const lp = audioCtx.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = 3000;
-
-    const birdEnv = audioCtx.createGain(); birdEnv.gain.value = 0;
-    osc.connect(lp); lp.connect(birdEnv); birdEnv.connect(master);
-    osc.start(t);
-
-    for (let n = 0; n < noteCount; n++) {
-      const nt = t + n * (type.dur + 0.08 + Math.random() * 0.12);
-      const pitch_var = (Math.random() - 0.5) * 200;
-      osc.frequency.setValueAtTime(type.start + pitch_var, nt);
-      osc.frequency.linearRampToValueAtTime(type.end + pitch_var, nt + type.dur);
-      const peak = 0.055 + Math.random() * 0.035;
-      birdEnv.gain.setValueAtTime(0, nt);
-      birdEnv.gain.linearRampToValueAtTime(peak, nt + 0.03);
-      birdEnv.gain.linearRampToValueAtTime(peak * 0.7, nt + type.dur * 0.7);
-      birdEnv.gain.linearRampToValueAtTime(0, nt + type.dur);
-    }
-
-    const totalDur = noteCount * (type.dur + 0.1) + 0.3;
-    osc.stop(t + totalDur + 0.1);
-
-    // Next bird call: 35–90 seconds later — rare and surprising
-    const nextCall = 35000 + Math.random() * 55000;
-    setTimeout(birdCall, nextCall);
+  if (nodeIndex === undefined) {
+    makeEntrySound();
+  } else {
+    makeNodeSound(nodeIndex);
   }
-  // First bird call after 20–40s
-  setTimeout(birdCall, 20000 + Math.random() * 20000);
-
   soundOn = true;
 }
+
+// 建立粉紅噪音緩衝
+function makePinkNoise(sr, secs) {
+  const size = sr * secs;
+  const buf = audioCtx.createBuffer(1, size, sr);
+  const d = buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0;
+  for (let i = 0; i < size; i++) {
+    const w = Math.random()*2-1;
+    b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759;
+    b2=0.96900*b2+w*0.1538520; b3=0.86650*b3+w*0.3104856;
+    b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+    d[i]=(b0+b1+b2+b3+b4+b5+w*0.5362)*0.11;
+  }
+  return buf;
+}
+
+// 建立白噪音緩衝
+function makeWhiteNoise(sr, secs) {
+  const size = sr * secs;
+  const buf = audioCtx.createBuffer(1, size, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < size; i++) d[i] = Math.random()*2-1;
+  return buf;
+}
+
+// 通用：建立一個循環噪音層
+function noiseLayer(buf, lpFreq, lpQ, gainVal, master) {
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf; src.loop = true;
+  src.loopStart = Math.random() * (buf.duration * 0.5);
+  const lp = audioCtx.createBiquadFilter();
+  lp.type = 'bandpass'; lp.frequency.value = lpFreq; lp.Q.value = lpQ;
+  const g = audioCtx.createGain(); g.gain.value = gainVal;
+  src.connect(lp); lp.connect(g); g.connect(master);
+  src.start();
+  currentSoundNodes.push(src);
+  return g;
+}
+
+// 通用：稀疏鳥叫
+function sparseBirds(master, interval_min, interval_max, vol) {
+  const types = [
+    {start:1800,end:2400,dur:0.22},{start:2200,end:1600,dur:0.28},
+    {start:1600,end:2000,dur:0.15},{start:2000,end:2200,dur:0.35},
+  ];
+  function call() {
+    const t = audioCtx.currentTime;
+    const type = types[Math.floor(Math.random()*types.length)];
+    const osc = audioCtx.createOscillator(); osc.type='sine';
+    const lp = audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=3000;
+    const env = audioCtx.createGain(); env.gain.value=0;
+    osc.connect(lp); lp.connect(env); env.connect(master);
+    const n = Math.floor(1+Math.random()*2);
+    for(let i=0;i<n;i++){
+      const nt=t+i*(type.dur+0.1+Math.random()*0.1);
+      const pv=(Math.random()-0.5)*200;
+      osc.frequency.setValueAtTime(type.start+pv,nt);
+      osc.frequency.linearRampToValueAtTime(type.end+pv,nt+type.dur);
+      const pk=vol*(0.8+Math.random()*0.4);
+      env.gain.setValueAtTime(0,nt);
+      env.gain.linearRampToValueAtTime(pk,nt+0.03);
+      env.gain.linearRampToValueAtTime(0,nt+type.dur);
+    }
+    osc.start(t); osc.stop(t+n*(type.dur+0.15)+0.3);
+    currentSoundNodes.push(osc);
+    setTimeout(call, (interval_min + Math.random()*(interval_max-interval_min))*1000);
+  }
+  setTimeout(call, (5+Math.random()*10)*1000);
+}
+
+// 通用：蟲鳴層
+function insectLayer(master, freq, vol) {
+  const osc = audioCtx.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+  const lfo = audioCtx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.8+Math.random()*1.2;
+  const lfoD = audioCtx.createGain(); lfoD.gain.value=0.002;
+  lfo.connect(lfoD);
+  const lp = audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=freq*1.3; lp.Q.value=0.5;
+  const env = audioCtx.createGain(); env.gain.value=0;
+  lfoD.connect(env.gain);
+  osc.connect(lp); lp.connect(env); env.connect(master);
+  osc.start(); lfo.start();
+  currentSoundNodes.push(osc); currentSoundNodes.push(lfo);
+  function breath() {
+    const t=audioCtx.currentTime;
+    const on=15+Math.random()*20, off=8+Math.random()*15;
+    const pk=vol*(0.8+Math.random()*0.4);
+    env.gain.setValueAtTime(0,t);
+    env.gain.linearRampToValueAtTime(pk,t+5);
+    env.gain.linearRampToValueAtTime(pk*0.7,t+on*0.8);
+    env.gain.linearRampToValueAtTime(0,t+on);
+    setTimeout(breath,(on+off)*1000);
+  }
+  setTimeout(breath, 3000+Math.random()*5000);
+}
+
+// ── 入口音景（原本的完整版）──
+function makeEntrySound() {
+  const master = audioCtx.createGain();
+  master.gain.setValueAtTime(0, audioCtx.currentTime);
+  master.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime+5);
+  master.connect(audioCtx.destination);
+  const sr=audioCtx.sampleRate;
+  const pink=makePinkNoise(sr,8);
+  noiseLayer(pink,600,0.6,0.5,master);
+  noiseLayer(pink,250,0.6,0.4,master);
+  noiseLayer(pink,90,0.6,0.3,master);
+  [1100,1350,1600,1850].forEach(f=>insectLayer(master,f,0.003));
+  sparseBirds(master,35,90,0.055);
+}
+
+// ── 節點音景 ──
+function makeNodeSound(idx) {
+  const master = audioCtx.createGain();
+  master.gain.setValueAtTime(0, audioCtx.currentTime);
+  master.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime+4);
+  master.connect(audioCtx.destination);
+  const sr=audioCtx.sampleRate;
+
+  switch(idx) {
+    case 0: { // 霧徑 — 極淡風聲 + 偶爾葉沙沙
+      const w=makeWhiteNoise(sr,6);
+      noiseLayer(w,200,0.3,0.12,master); // 低頻風
+      noiseLayer(w,800,0.8,0.06,master); // 葉沙沙
+      // 偶爾葉片陣風
+      function gust(){
+        const t=audioCtx.currentTime;
+        const g=audioCtx.createGain(); g.gain.value=0;
+        const src=audioCtx.createBufferSource(); src.buffer=makeWhiteNoise(sr,2);
+        const lp=audioCtx.createBiquadFilter(); lp.type='bandpass'; lp.frequency.value=600; lp.Q.value=0.5;
+        src.connect(lp); lp.connect(g); g.connect(master);
+        g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.08,t+0.4);
+        g.gain.linearRampToValueAtTime(0,t+1.8);
+        src.start(t); src.stop(t+2);
+        currentSoundNodes.push(src);
+        setTimeout(gust,(12+Math.random()*20)*1000);
+      }
+      setTimeout(gust,8000);
+      break;
+    }
+    case 1: { // 月湖 — 靜夜，極輕蟲鳴
+      [1200,1500].forEach(f=>insectLayer(master,f,0.002));
+      // 偶爾遠處青蛙
+      function frog(){
+        const t=audioCtx.currentTime;
+        const osc=audioCtx.createOscillator(); osc.type='sine'; osc.frequency.value=300+Math.random()*60;
+        const env=audioCtx.createGain(); env.gain.value=0;
+        osc.connect(env); env.connect(master);
+        env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(0.025,t+0.05);
+        env.gain.linearRampToValueAtTime(0,t+0.25);
+        osc.start(t); osc.stop(t+0.3);
+        currentSoundNodes.push(osc);
+        setTimeout(frog,(20+Math.random()*40)*1000);
+      }
+      setTimeout(frog,15000);
+      break;
+    }
+    case 2: { // 老樹下 — 稀疏鳥叫 + 微風葉動
+      const w=makeWhiteNoise(sr,5);
+      noiseLayer(w,500,0.5,0.05,master);
+      sparseBirds(master,15,35,0.04);
+      break;
+    }
+    case 3: { // 微光屋 — 幾乎靜音，偶爾燭火劈啪
+      function crackle(){
+        const t=audioCtx.currentTime;
+        const osc=audioCtx.createOscillator(); osc.type='sawtooth';
+        osc.frequency.value=80+Math.random()*40;
+        const lp=audioCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=300;
+        const env=audioCtx.createGain(); env.gain.value=0;
+        osc.connect(lp); lp.connect(env); env.connect(master);
+        env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(0.015,t+0.01);
+        env.gain.linearRampToValueAtTime(0,t+0.08);
+        osc.start(t); osc.stop(t+0.1);
+        currentSoundNodes.push(osc);
+        setTimeout(crackle,(3+Math.random()*8)*1000);
+      }
+      setTimeout(crackle,4000);
+      break;
+    }
+    case 4: { // 雨亭 — 雨聲為主
+      const w=makeWhiteNoise(sr,8);
+      noiseLayer(w,1200,0.4,0.35,master); // 雨聲主體
+      noiseLayer(w,400,0.3,0.15,master);  // 低頻雨打地
+      noiseLayer(w,3000,1.2,0.08,master); // 細雨噴濺
+      break;
+    }
+    case 5: { // 觀星台 — 高處風聲，空曠
+      const w=makeWhiteNoise(sr,7);
+      noiseLayer(w,150,0.25,0.14,master); // 深沉風
+      noiseLayer(w,400,0.4,0.06,master);  // 風刮過
+      // 偶爾風切聲
+      function windgust(){
+        const t=audioCtx.currentTime;
+        const g=audioCtx.createGain(); g.gain.value=0;
+        const src=audioCtx.createBufferSource(); src.buffer=makeWhiteNoise(sr,3);
+        const lp=audioCtx.createBiquadFilter(); lp.type='bandpass'; lp.frequency.value=300; lp.Q.value=0.3;
+        src.connect(lp); lp.connect(g); g.connect(master);
+        const dur=2+Math.random()*2;
+        g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.1,t+dur*0.4);
+        g.gain.linearRampToValueAtTime(0,t+dur);
+        src.start(t); src.stop(t+dur+0.1);
+        currentSoundNodes.push(src);
+        setTimeout(windgust,(10+Math.random()*20)*1000);
+      }
+      setTimeout(windgust,6000);
+      break;
+    }
+    case 6: { // 溫室 — 室內感，偶爾水滴
+      const p=makePinkNoise(sr,5);
+      noiseLayer(p,300,0.3,0.06,master); // 室內底噪
+      function drip(){
+        const t=audioCtx.currentTime;
+        const osc=audioCtx.createOscillator(); osc.type='sine';
+        osc.frequency.setValueAtTime(1200+Math.random()*400,t);
+        osc.frequency.exponentialRampToValueAtTime(400,t+0.15);
+        const env=audioCtx.createGain(); env.gain.value=0;
+        osc.connect(env); env.connect(master);
+        env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(0.03,t+0.01);
+        env.gain.linearRampToValueAtTime(0,t+0.15);
+        osc.start(t); osc.stop(t+0.2);
+        currentSoundNodes.push(osc);
+        setTimeout(drip,(5+Math.random()*12)*1000);
+      }
+      setTimeout(drip,3000);
+      break;
+    }
+    case 7: { // 溪谷 — 緩緩流水
+      const p=makePinkNoise(sr,8);
+      noiseLayer(p,600,0.6,0.45,master);
+      noiseLayer(p,250,0.5,0.3,master);
+      noiseLayer(p,100,0.4,0.2,master);
+      break;
+    }
+  }
+}
+
+/* ═══════════════════════════
+   DAY / NIGHT BACKGROUND
+═══════════════════════════ */
+function updateDayNight() {
+  const h = new Date().getHours();
+  const entry = document.getElementById('s-entry');
+  if (h >= 18 || h < 6) {
+    entry.classList.add('night-mode');
+  } else {
+    entry.classList.remove('night-mode');
+  }
+}
+updateDayNight();
+setInterval(updateDayNight, 60000);
 
 /* ═══════════════════════════
    FIREFLY PARTICLES
@@ -1144,7 +1213,7 @@ function goTo(id, push=true) {
     const el = next.querySelector('.mb-inner');
     el.style.animation='none'; el.offsetHeight; el.style.animation='';
   }
-  if (!soundOn) { try { initAudio(); } catch(e){} }
+  if (!soundOn) { try { initAudio(undefined); } catch(e){} }
 }
 function goBack(){
   const prev = navStack.pop() || 's-entry';
@@ -1193,6 +1262,7 @@ function openNode(i){
   curSlide = (dow===0 ? 6 : dow-1) % NODES[i].slides.length;
   renderNode();
   goTo('s-node');
+  try { initAudio(i); } catch(e){}
 }
 
 function renderNode(){
@@ -1292,7 +1362,7 @@ async function sendMailbox(){
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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',
+        'Authorization': 'Bearer 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',
         'HTTP-Referer': 'https://pia640210.github.io/xinjianci/',
         'X-Title': 'xinjianci'
       },
