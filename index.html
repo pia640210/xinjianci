@@ -1367,29 +1367,29 @@ async function sendMailbox(){
   respText.classList.add('tcursor'); respText.textContent='';
   const systemPrompt = `你是「心間隙花園」的回聲。這是一個讓城市裡疲憊的人可以停下來的地方。當有人把心事投入花園，你的任務：讓他感覺被聽見，而不是被分析。不要給建議，不要給結論，不要說「你應該」。說出他可能沒有說完的那個感受。在最後，留下一個輕輕的問題——不是要他想通，只是讓他多待一會兒。語氣：像深夜寫的一封信。溫柔，但不甜膩。誠實，但不沉重。字數：100–150字。語言：繁體中文。禁用詞：靈魂、宇宙、光芒、綻放、昇華、歸途、療癒、修行。格式：純文字段落，不要條列，不要標題。`;
 
-  try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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',
-        'HTTP-Referer': 'https://pia640210.github.io/xinjianci/',
-        'X-Title': 'xinjianci'
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-preview:free',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: input }
-        ]
-      })
-    });
+  const tryFetch = async (seed) => {
+    const prompt = encodeURIComponent(systemPrompt + '\n\n讀者的心事：' + input);
+    const url = `https://text.pollinations.ai/${prompt}?model=openai&seed=${seed}&json=false`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(18000) });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content || '';
+    const text = await res.text();
     if (!text || text.trim().length < 5) throw new Error('empty');
+    return text.trim();
+  };
+
+  try {
+    let text = '';
+    for (let i = 0; i < 3; i++) {
+      try {
+        text = await tryFetch(Date.now() + i * 1000);
+        break;
+      } catch(e) {
+        if (i === 2) throw e;
+        await new Promise(r => setTimeout(r, 2000));
+      }
+    }
     respText.classList.remove('tcursor');
-    await typewrite(respText, text.trim());
+    await typewrite(respText, text);
   } catch(e) {
     console.error('API error:', e);
     respText.classList.remove('tcursor');
