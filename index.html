@@ -1285,15 +1285,21 @@ async function sendMailbox(){
   const respText=document.getElementById('mbRespText');
   resp.classList.add('show');
   respText.classList.add('tcursor'); respText.textContent='';
+  const systemPrompt = `你是「心間隙花園」的回聲。這是一個讓城市裡疲憊的人可以停下來的地方。當有人把心事投入花園，你的任務：讓他感覺被聽見，而不是被分析。不要給建議，不要給結論，不要說「你應該」。說出他可能沒有說完的那個感受。在最後，留下一個輕輕的問題——不是要他想通，只是讓他多待一會兒。語氣：像深夜寫的一封信。溫柔，但不甜膩。誠實，但不沉重。字數：100–150字。語言：繁體中文。禁用詞：靈魂、宇宙、光芒、綻放、昇華、歸途、療癒、修行。格式：純文字段落，不要條列，不要標題。`;
+
   try {
-    const res = await fetch('https://xinjianci.pia640210.workers.dev', {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AQ.Ab8RN6LytjPnO_eXUtCkp1jj1m6LHBt8PbCSgkL7PTeheNEw3A`;
+    const res = await fetch(geminiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userMessage: input })
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ parts: [{ text: input }] }]
+      })
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    const text = data.text || '';
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     if (!text || text.trim().length < 5) throw new Error('empty');
     respText.classList.remove('tcursor');
     await typewrite(respText, text.trim());
