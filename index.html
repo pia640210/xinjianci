@@ -1261,8 +1261,18 @@ function openNode(i){
   const dow = new Date().getDay(); // 0=Sun
   curSlide = (dow===0 ? 6 : dow-1) % NODES[i].slides.length;
   renderNode();
+  // 先啟動音效（在點擊事件鏈內），再切換畫面
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } else if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    stopCurrentSound();
+    makeNodeSound(i);
+    soundOn = true;
+  } catch(e){}
   goTo('s-node');
-  try { initAudio(i); } catch(e){}
 }
 
 function renderNode(){
