@@ -658,7 +658,7 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
       有些聲音<br>
       只能在安靜的地方被聽見。
     </div>
-    <p class="e-orient">八條路，八種心情。<br>帶著你今天的重量，走進來。</p>
+    <p class="e-orient">八條路，八種心情。<br>每種心情，都有適合自己的位置。</p>
     <button class="ff ff-border e-cta" onclick="goTo('s-paths')">走 入 秘 徑</button>
     <p class="e-publisher">心橋出版 · 這裡的每條路，都有人寫成了書</p>
   </div>
@@ -704,7 +704,7 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 <!-- ══ S6: SAVED NOTES ══ -->
 <div class="screen" id="s-saved">
   <div class="saved-inner">
-    <button class="ff ff-text saved-back" onclick="goBack()">← 回 到 花 園</button>
+    <button class="ff ff-text saved-back" onclick="goTo('s-node',false)">← 回 到 花 園</button>
     <h2 class="saved-title">口 袋 裡 的 紙 條</h2>
     <p class="saved-sub">你 在 漫 步 時 撿 起 的 字 句</p>
     <div id="savedList"></div>
@@ -1874,7 +1874,7 @@ function openSaved(){
         <button class="saved-item-del ff" onclick="deleteNote(${i})">移 除</button>
       </div>`).join('');
   }
-  goTo('s-saved');
+  goTo('s-saved', false);
 }
 
 function deleteNote(i){
