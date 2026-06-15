@@ -1722,6 +1722,44 @@ function shallowerSlide(){
 /* ═══════════════════════════
    MAILBOX
 ═══════════════════════════ */
+/* ── 情緒關鍵字對應表 ── */
+const EMOTION_KEYWORDS = {
+  tired:   ['累','撐','疲','耗','沒力','精疲','倦','睡不著','睡不好','撐不住','好累','太累','已經很累'],
+  lonely:  ['孤單','孤獨','沒人','沒有人','懂我','理解','寂寞','一個人','陪','孤'],
+  family:  ['媽媽','爸爸','父母','家人','孩子','兄弟','姐妹','家裡','家庭','婆婆','公公','媽','爸','兒子','女兒'],
+  love:    ['愛','感情','分手','失戀','喜歡','他','她','交往','戀愛','心碎','思念','想念','放不下','前任'],
+  doubt:   ['不夠好','沒用','廢','失敗','懷疑自己','做不到','沒有價值','沒用','不行','夠不夠','我不好'],
+  anger:   ['生氣','憤怒','委屈','不公平','被誤解','冤枉','氣','火','憋','受夠','受不了','很煩'],
+  lost:    ['迷失','方向','不知道','茫然','未來','該怎麼','選擇','走哪','目標','意義','為什麼活','不知道要'],
+  uneasy:  ['不安','焦慮','擔心','害怕','恐懼','緊張','莫名','說不清','不對勁','預感','奇怪'],
+};
+
+const PATH_NAMES = ['霧徑','月湖','老樹下','微光屋','雨亭','觀星台','溫室','溪谷'];
+
+function detectEmotion(text){
+  const scores = {};
+  for(const [emotion, keywords] of Object.entries(EMOTION_KEYWORDS)){
+    scores[emotion] = keywords.filter(k => text.includes(k)).length;
+  }
+  const best = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  // 有明確關鍵字就用它，否則回傳 null（後面用路徑決定）
+  return best[0][1] > 0 ? best[0][0] : null;
+}
+
+function pickResponse(pathIndex, emotionKey){
+  const pathName = PATH_NAMES[pathIndex] || '霧徑';
+  const pool = (typeof GARDEN_RESPONSES !== 'undefined' && GARDEN_RESPONSES[pathName])
+    ? GARDEN_RESPONSES[pathName] : null;
+  if(!pool) return null;
+
+  // 有情緒類別就用，沒有就從這條路徑所有類別合併隨機抽
+  let candidates = emotionKey && pool[emotionKey] ? pool[emotionKey]
+    : Object.values(pool).flat();
+
+  if(!candidates || candidates.length === 0) return null;
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
 async function sendMailbox(){
   const input=document.getElementById('mbInput').value.trim();
   if(!input)return;
@@ -1732,34 +1770,16 @@ async function sendMailbox(){
   resp.classList.add('show');
   respText.classList.add('tcursor'); respText.textContent='';
 
-  const system = `你是「心間隙花園」的回聲。讓投入心事的人感覺被聽見，而不是被分析。不要給建議，不說「你應該」。說出他可能沒說完的感受，最後留一個輕輕的問題。語氣像深夜的信，溫柔不甜膩。100-150字繁體中文純文字，禁用：靈魂、宇宙、光芒、綻放、昇華、療癒。`;
+  // 偵測情緒 + 依路徑取回應
+  const emotionKey = detectEmotion(input);
+  const pathIndex = (typeof curNode !== 'undefined' && curNode !== null) ? curNode : 0;
+  const text = pickResponse(pathIndex, emotionKey);
 
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: system,
-        messages: [
-          { role: 'user', content: `讀者的心事：${input}` }
-        ]
-      })
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const text = data.content?.[0]?.text?.trim();
-    if (!text || text.length < 5) throw new Error('empty');
-    respText.classList.remove('tcursor');
+  await new Promise(r=>setTimeout(r,900)); // 短暫停頓，讓聆聽感更真實
+  respText.classList.remove('tcursor');
+  if(text){
     await typewrite(respText, text);
-  } catch(e) {
-    console.error('API error:', e);
-    respText.classList.remove('tcursor');
+  } else {
     respText.textContent = '花園暫時無法回應。但你說的話，已經落在這裡了。';
   }
 
@@ -1928,5 +1948,6 @@ function toggleVoice() {
 
 buildPaths();
 </script>
+<script src="garden-responses.js"></script>
 </body>
 </html>
