@@ -127,6 +127,18 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
   padding:13px 46px;
   opacity:0;animation:up 1s 2.1s forwards;
 }
+.e-orient{
+  font-family:var(--serif);font-size:12px;font-weight:300;
+  letter-spacing:0.12em;color:var(--fog);line-height:2;
+  margin-bottom:2.5rem;
+  opacity:0;animation:up 1s 1.7s forwards;
+}
+.e-publisher{
+  font-family:var(--sans);font-size:10px;
+  letter-spacing:0.2em;color:var(--b2);
+  margin-top:2.5rem;
+  opacity:0;animation:up 0.8s 3s forwards;
+}
 
 /* ══════════════════════════════
    PARTICLES (fireflies)
@@ -646,7 +658,9 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
       有些聲音<br>
       只能在安靜的地方被聽見。
     </div>
+    <p class="e-orient">八條路，八種心情。<br>帶著你今天的重量，走進來。</p>
     <button class="ff ff-border e-cta" onclick="goTo('s-paths')">走 入 秘 徑</button>
+    <p class="e-publisher">心橋出版 · 這裡的每條路，都有人寫成了書</p>
   </div>
 </div>
 
@@ -656,14 +670,14 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
   <p class="paths-label">選 一 條 你 今 天 想 走 的 路</p>
   <div class="paths-grid" id="pathsGrid"></div>
   <div class="paths-foot">
-    <button class="ff ff-text paths-foot-btn" style="font-size:12px;letter-spacing:0.25em;color:var(--smoke)" onclick="goTo('s-mailbox')">📮 有話想說</button>
+    <button class="ff ff-text paths-foot-btn" style="font-size:12px;letter-spacing:0.25em;color:var(--smoke)" onclick="goTo('s-mailbox')">◦ 有什麼，想說給這裡聽</button>
   </div>
 </div>
 
 <!-- ══ S3: NODE ══ -->
 <div class="screen" id="s-node">
   <div class="node-topbar">
-    <button class="ff ff-text node-back" onclick="goBack()">← 回到地圖</button>
+    <button class="ff ff-text node-back" onclick="goBack()">← 回到路口</button>
     <span class="node-top-name" id="nodeTopName"></span>
     <span class="node-top-theme" id="nodeTopTheme"></span>
   </div>
@@ -700,9 +714,9 @@ body{font-family:var(--sans);color:var(--light);-webkit-font-smoothing:antialias
 <!-- ══ S4: MAILBOX ══ -->
 <div class="screen" id="s-mailbox">
   <div class="mb-inner">
-    <button class="ff ff-text mb-back" onclick="goBack()">← 回 到 地 圖</button>
-    <h2 class="mb-title">心事投遞箱</h2>
-    <p class="mb-sub">有什麼放不下的嗎？<br>寫下來就好。</p>
+    <button class="ff ff-text mb-back" onclick="goBack()">← 回 到 路 口</button>
+    <h2 class="mb-title">花園的耳朵</h2>
+    <p class="mb-sub">有什麼放不下的嗎？<br>寫下來就好。這裡聽得見。</p>
     <div style="position:relative">
       <textarea class="mb-textarea" id="mbInput" placeholder="今天，有什麼事讓你停在這裡？"></textarea>
       <button class="ff" id="mbMic" onclick="toggleVoice()" title="語音輸入"
@@ -1621,7 +1635,10 @@ function renderNode(){
   const slides = n.weeks[weekIdx];
   const s = slides[curSlide];
   const isLast = curSlide === slides.length - 1;
-  const showBooks = isLast && s.books && s.books.length > 0;
+  // Get books from the path's last slide so all slides can reference them
+  const pathBooks = slides[slides.length - 1].books || [];
+  const showBooks = isLast && pathBooks.length > 0;
+  const showBookHint = !isLast && curSlide >= 2 && pathBooks.length > 0;
   const hasNext = curSlide < slides.length - 1;
 
   document.getElementById('nodeTopName').textContent = n.icon + '\u2002' + n.name;
@@ -1643,9 +1660,15 @@ function renderNode(){
     ? `<div class="book-reveal r4">
         <span class="book-hint">這 些 文 字 來 自</span>
         <div class="book-links">
-          ${s.books.map(b=>`<a class="book-link ff" href="${PUB}" target="_blank" rel="noopener">${b}</a>`).join('')}
+          ${pathBooks.map(b=>`<a class="book-link ff" href="${PUB}" target="_blank" rel="noopener">${b}</a>`).join('')}
         </div>
-       </div>` : '';
+       </div>` : (showBookHint
+    ? `<div class="book-reveal r4" style="opacity:0;animation:up 0.6s 3.8s forwards">
+        <span class="book-hint" style="color:var(--b2)">↳ 有人把這條路走成了文字</span>
+        <div class="book-links">
+          ${pathBooks.map(b=>`<a class="book-link ff" href="${PUB}" target="_blank" rel="noopener" style="opacity:0.6">${b}</a>`).join('')}
+        </div>
+       </div>` : '');
 
   // "deeper" — text changes per depth to feel like discovering more, not paginating
   const deeperLabels = [
@@ -1711,47 +1734,33 @@ async function sendMailbox(){
 
   const system = `你是「心間隙花園」的回聲。讓投入心事的人感覺被聽見，而不是被分析。不要給建議，不說「你應該」。說出他可能沒說完的感受，最後留一個輕輕的問題。語氣像深夜的信，溫柔不甜膩。100-150字繁體中文純文字，禁用：靈魂、宇宙、光芒、綻放、昇華、療癒。`;
 
-  const withTimeout = (promise, ms) => {
-    const timer = new Promise((_,rej) => setTimeout(()=>rej(new Error('timeout')), ms));
-    return Promise.race([promise, timer]);
-  };
-
   try {
-    const res = await withTimeout(fetch('https://text.pollinations.ai/', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
-        model: 'openai',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: system,
         messages: [
-          { role: 'system', content: system },
           { role: 'user', content: `讀者的心事：${input}` }
-        ],
-        seed: Date.now() % 9999,
-        private: true
+        ]
       })
-    }), 20000);
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = (await res.text()).trim();
+    const data = await res.json();
+    const text = data.content?.[0]?.text?.trim();
     if (!text || text.length < 5) throw new Error('empty');
     respText.classList.remove('tcursor');
     await typewrite(respText, text);
   } catch(e) {
-    console.error('POST error:', e);
-    try {
-      const prompt = encodeURIComponent(system + '\n\n讀者的心事：' + input);
-      const res2 = await withTimeout(
-        fetch(`https://text.pollinations.ai/${prompt}?model=openai&private=true`),
-        18000
-      );
-      const text2 = (await res2.text()).trim();
-      if (!text2 || text2.length < 5) throw new Error('empty');
-      respText.classList.remove('tcursor');
-      await typewrite(respText, text2);
-    } catch(e2) {
-      console.error('GET error:', e2);
-      respText.classList.remove('tcursor');
-      respText.textContent = '花園暫時無法回應。但你說的話，已經落在這裡了。';
-    }
+    console.error('API error:', e);
+    respText.classList.remove('tcursor');
+    respText.textContent = '花園暫時無法回應。但你說的話，已經落在這裡了。';
   }
 
   btn.disabled=false; btn.textContent='再 投 一 張';
@@ -1759,9 +1768,21 @@ async function sendMailbox(){
   if(bookHint){
     bookHint.style.display='block';
     bookHint.style.animation='none'; bookHint.offsetHeight; bookHint.style.animation='up 0.8s forwards';
-    const allBooks = ['《做自己》','《自己站起來》','《如何愛你的父母》','《說話的藝術》','《離婚黑皮書》','《我是如何失敗的》','《追愛》','《有情人》','《如何撒嬌》'];
-    const shuffled = allBooks.sort(()=>Math.random()-0.5).slice(0,3);
-    document.getElementById('mbBookLinks').innerHTML = shuffled.map(b=>
+    // Use path-specific books if a path is active, else fall back to curated selection
+    const pathBookMap = {
+      0: ['《做自己》','《自己站起來》'],          // 霧徑
+      1: ['《做自己》','《自己站起來》'],          // 月湖
+      2: ['《如何愛你的父母》'],                  // 老樹下
+      3: ['《追愛》','《有情人》'],               // 微光屋
+      4: ['《離婚黑皮書》','《我是如何失敗的》'],  // 雨亭
+      5: ['《做自己》','《我是如何失敗的》'],      // 觀星台
+      6: ['《說話的藝術》','《如何撒嬌》'],       // 溫室
+      7: ['《自己站起來》','《做自己》'],          // 溪谷
+    };
+    const suggested = (curNode !== undefined && pathBookMap[curNode])
+      ? pathBookMap[curNode]
+      : ['《做自己》','《自己站起來》','《追愛》'];
+    document.getElementById('mbBookLinks').innerHTML = suggested.map(b=>
       `<a class="book-link ff" href="https://pia640210.github.io/creative-publisher/" target="_blank" rel="noopener">${b}</a>`
     ).join('');
   }
